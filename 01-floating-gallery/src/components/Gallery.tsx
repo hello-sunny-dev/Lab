@@ -179,8 +179,6 @@ export function Gallery() {
             card={card}
             index={i}
             spread={spread}
-            sceneMx={mx}
-            sceneMy={my}
             isSelected={selected === card.id}
             anySelected={selected !== null}
             onSelect={setSelected}
