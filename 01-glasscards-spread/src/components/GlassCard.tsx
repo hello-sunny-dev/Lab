@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type MouseEvent } from "react";
+import { useRef, useEffect, type MouseEvent } from "react";
 import {
   motion,
   useMotionValue,
@@ -48,11 +48,41 @@ export function GlassCard({
   const targetX = isMobile ? slot.position.x * 0.38 : slot.position.x;
   const targetY = isMobile ? slot.position.y * 0.45 : slot.position.y;
   const targetRot = isMobile ? slot.rotation * 0.5 : slot.rotation;
+  const selectedScale = isMobile ? 1.15 : 1.2;
 
-  const spreadX = useTransform(spread, [0, 1], [0, targetX]);
-  const spreadY = useTransform(spread, [0, 1], [0, targetY]);
-  const spreadRot = useTransform(spread, [0, 1], [0, targetRot]);
-  const spreadScale = useTransform(spread, [0, 1], [0.88, 1]);
+  // Discrete selection state as motion values so a single useTransform per
+  // property can drive all states (default / selected / other-selected).
+  // Avoids the animate-prop vs style-motion-value conflict.
+  const sel = useMotionValue(isSelected ? 1 : 0);
+  const others = useMotionValue(anySelected && !isSelected ? 1 : 0);
+  useEffect(() => { sel.set(isSelected ? 1 : 0); }, [isSelected, sel]);
+  useEffect(() => { others.set(anySelected && !isSelected ? 1 : 0); }, [anySelected, isSelected, others]);
+
+  const posSpring = { stiffness: 150, damping: 22, mass: 0.8 };
+  const x = useSpring(
+    useTransform([spread, sel, others], ([s, sl, ot]: number[]) =>
+      sl ? 0 : ot ? targetX * 1.3 : targetX * s
+    ),
+    posSpring
+  );
+  const y = useSpring(
+    useTransform([spread, sel, others], ([s, sl, ot]: number[]) =>
+      sl ? 0 : ot ? targetY * 1.3 : targetY * s
+    ),
+    posSpring
+  );
+  const rotateZ = useSpring(
+    useTransform([spread, sel, others], ([s, sl, ot]: number[]) =>
+      sl ? 0 : ot ? targetRot : targetRot * s
+    ),
+    posSpring
+  );
+  const scale = useSpring(
+    useTransform([spread, sel, others], ([s, sl, ot]: number[]) =>
+      sl ? selectedScale : ot ? 0.75 : 0.88 + 0.12 * s
+    ),
+    posSpring
+  );
 
   function onMove(e: MouseEvent) {
     if (isMobile || isSelected) return;
@@ -76,20 +106,11 @@ export function GlassCard({
         e.stopPropagation();
         onSelect(isSelected ? null : card.id);
       }}
-      key={`${card.id}-${selectedId}`}
-      animate={
-        isSelected
-          ? { x: 0, y: 0, scale: isMobile ? 1.15 : 1.2, rotateZ: 0 }
-          : anySelected
-            ? { x: targetX * 1.3, y: targetY * 1.3, scale: 0.75, rotateZ: targetRot }
-            : undefined
-      }
-      transition={{ type: "spring", stiffness: 150, damping: 22, mass: 0.8 }}
       style={{
-        x: isSelected || anySelected ? undefined : spreadX,
-        y: isSelected || anySelected ? undefined : spreadY,
-        rotateZ: isSelected || anySelected ? undefined : spreadRot,
-        scale: isSelected || anySelected ? undefined : spreadScale,
+        x,
+        y,
+        rotateZ,
+        scale,
         position: "absolute",
         left: "50%",
         top: "50%",
@@ -100,9 +121,12 @@ export function GlassCard({
         transition: "opacity 0.4s ease",
         cursor: "pointer",
       }}
+      className="select-none"
     >
-      {/* Inner wrapper for 3D tilt — doesn't affect hit area */}
+      {/* Inner wrapper for 3D tilt — pointer-events none so the flat
+          outer div owns the hit area (prevents cursor flicker) */}
       <motion.div
+        className="pointer-events-none"
         style={{
           rotateX: isSelected ? 0 : rotateX,
           rotateY: isSelected ? 0 : rotateY,
