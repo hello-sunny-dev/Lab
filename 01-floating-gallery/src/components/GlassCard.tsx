@@ -16,6 +16,7 @@ const CARD_H = 340;
 interface Props {
   card: CardData;
   index: number;
+  slot: { position: { x: number; y: number }; rotation: number };
   spread: MotionValue<number>;
   isSelected: boolean;
   anySelected: boolean;
@@ -26,6 +27,7 @@ interface Props {
 export function GlassCard({
   card,
   index,
+  slot,
   spread,
   isSelected,
   anySelected,
@@ -42,9 +44,9 @@ export function GlassCard({
 
   const w = isMobile ? 160 : CARD_W;
   const h = isMobile ? 220 : CARD_H;
-  const targetX = isMobile ? card.position.x * 0.38 : card.position.x;
-  const targetY = isMobile ? card.position.y * 0.45 : card.position.y;
-  const targetRot = isMobile ? card.rotation * 0.5 : card.rotation;
+  const targetX = isMobile ? slot.position.x * 0.38 : slot.position.x;
+  const targetY = isMobile ? slot.position.y * 0.45 : slot.position.y;
+  const targetRot = isMobile ? slot.rotation * 0.5 : slot.rotation;
 
   const spreadX = useTransform(spread, [0, 1], [0, targetX]);
   const spreadY = useTransform(spread, [0, 1], [0, targetY]);

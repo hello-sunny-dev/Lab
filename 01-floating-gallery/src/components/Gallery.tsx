@@ -8,7 +8,7 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { cards, type CardData } from "@/data/cards";
+import { cards, slots, type CardData } from "@/data/cards";
 import { GlassCard } from "./GlassCard";
 
 const SCENE_SPRING = { stiffness: 40, damping: 30 };
@@ -222,6 +222,7 @@ export function Gallery() {
             key={card.id}
             card={card}
             index={i}
+            slot={slots[i]}
             spread={spread}
             isSelected={selected === card.id}
             anySelected={selected !== null}

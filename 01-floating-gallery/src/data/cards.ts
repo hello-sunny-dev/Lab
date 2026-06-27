@@ -8,9 +8,15 @@ export interface CardData {
   accentColor: string;
   accentRgb: string;
   icon: string;
-  position: { x: number; y: number };
-  rotation: number;
 }
+
+export const slots = [
+  { position: { x: -270, y: -80 }, rotation: -6 },
+  { position: { x: 0, y: -160 }, rotation: 2 },
+  { position: { x: 300, y: -50 }, rotation: 5 },
+  { position: { x: -180, y: 150 }, rotation: -3 },
+  { position: { x: 200, y: 170 }, rotation: 4 },
+];
 
 export const cards: CardData[] = [
   {
@@ -23,8 +29,6 @@ export const cards: CardData[] = [
     accentColor: "#a78bfa",
     accentRgb: "167, 139, 250",
     icon: "◆",
-    position: { x: -270, y: -80 },
-    rotation: -6,
   },
   {
     id: 2,
@@ -36,8 +40,6 @@ export const cards: CardData[] = [
     accentColor: "#38bdf8",
     accentRgb: "56, 189, 248",
     icon: "◎",
-    position: { x: 0, y: -160 },
-    rotation: 2,
   },
   {
     id: 3,
@@ -49,8 +51,6 @@ export const cards: CardData[] = [
     accentColor: "#fb923c",
     accentRgb: "251, 146, 60",
     icon: "◈",
-    position: { x: 300, y: -50 },
-    rotation: 5,
   },
   {
     id: 4,
@@ -62,8 +62,6 @@ export const cards: CardData[] = [
     accentColor: "#34d399",
     accentRgb: "52, 211, 153",
     icon: "◇",
-    position: { x: -180, y: 150 },
-    rotation: -3,
   },
   {
     id: 5,
@@ -75,7 +73,5 @@ export const cards: CardData[] = [
     accentColor: "#f472b6",
     accentRgb: "244, 114, 182",
     icon: "◉",
-    position: { x: 200, y: 170 },
-    rotation: 4,
   },
 ];
