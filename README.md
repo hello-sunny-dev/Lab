@@ -6,11 +6,11 @@ Each project is a weekend-sized, deployable experiment exploring a single concep
 
 ## Projects
 
-### 01 — Floating Gallery `✅ Live`
+### 01 — GlassCards Spread `✅ Live`
 
-**[View Live](https://01-floating-gallery.vercel.app)**
+**[View Live](https://01-glasscards-spread.vercel.app)**
 
-A glassmorphic card experience with scroll-driven spread, 3D tilt, and click-to-reveal interactions.
+Interactive glassmorphic cards with scroll-driven spread, 3D tilt, and click-to-reveal interactions.
 
 - **Stack:** Next.js 16, Framer Motion, Tailwind CSS
 - **Key features:**
@@ -79,7 +79,7 @@ Each project is a standalone Next.js app in its own directory:
 
 ```
 Lab/
-├── 01-floating-gallery/
+├── 01-glasscards-spread/
 ├── 02-3d-hero/          (upcoming)
 ├── 03-scroll-story/     (upcoming)
 └── ...

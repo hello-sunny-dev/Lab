@@ -78,21 +78,23 @@ export function GlassCard({
       animate={
         isSelected
           ? { x: 0, y: 0, scale: isMobile ? 1.15 : 1.2, rotateZ: 0 }
-          : undefined
+          : anySelected
+            ? { x: targetX * 1.3, y: targetY * 1.3, scale: 0.75, rotateZ: targetRot }
+            : undefined
       }
       transition={{ type: "spring", stiffness: 150, damping: 22, mass: 0.8 }}
       style={{
-        x: isSelected ? undefined : spreadX,
-        y: isSelected ? undefined : spreadY,
-        rotateZ: isSelected ? undefined : spreadRot,
-        scale: isSelected ? undefined : spreadScale,
+        x: isSelected || anySelected ? undefined : spreadX,
+        y: isSelected || anySelected ? undefined : spreadY,
+        rotateZ: isSelected || anySelected ? undefined : spreadRot,
+        scale: isSelected || anySelected ? undefined : spreadScale,
         position: "absolute",
         left: "50%",
         top: "50%",
         marginLeft: -w / 2,
         marginTop: -h / 2,
         zIndex: isSelected ? 60 : anySelected ? 1 : index + 1,
-        opacity: anySelected && !isSelected ? 0.3 : 1,
+        opacity: anySelected && !isSelected ? 0.1 : 1,
         transition: "opacity 0.4s ease",
         cursor: "pointer",
       }}
