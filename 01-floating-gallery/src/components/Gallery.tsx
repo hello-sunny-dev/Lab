@@ -189,21 +189,28 @@ export function Gallery() {
 
       {/* Scroll hint */}
       <motion.div
-        className="absolute bottom-10 flex flex-col items-center gap-3"
+        className="absolute bottom-10 sm:bottom-10 flex flex-col items-center gap-2"
         style={{ zIndex: 20, opacity: hintOpacity }}
       >
         <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          className="flex flex-col items-center"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-1"
         >
-          <div className="h-6 w-[1px] bg-gradient-to-b from-transparent to-white/15" />
-          <svg width="10" height="6" viewBox="0 0 10 6" className="mt-1 text-white/15">
-            <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" />
+          <svg width="20" height="32" viewBox="0 0 20 32" className="text-white/30 sm:text-white/15">
+            <rect x="5" y="0" width="10" height="20" rx="5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <motion.circle
+              cx="10" cy="8"
+              r="2"
+              fill="currentColor"
+              animate={{ cy: [7, 13, 7] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <path d="M6 24L10 28L14 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
           </svg>
         </motion.div>
-        <p className="text-[9px] font-medium tracking-[0.3em] uppercase text-white/10">
-          {isMobile ? "Swipe" : "Scroll"}
+        <p className="text-[11px] sm:text-[9px] font-medium tracking-[0.2em] uppercase text-white/40 sm:text-white/15">
+          {isMobile ? "Swipe up & down" : "Scroll to explore"}
         </p>
       </motion.div>
     </div>
