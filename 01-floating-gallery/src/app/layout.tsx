@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Floating Gallery",
-  description: "A premium floating card experience with depth, parallax, and motion.",
+  title: "GlassCards Spread",
+  description: "Interactive glassmorphic card experience with scroll-driven spread and shuffle.",
 };
 
 export default function RootLayout({
