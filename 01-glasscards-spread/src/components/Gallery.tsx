@@ -57,15 +57,18 @@ export function Gallery() {
 
   function handleShuffle() {
     if (isShuffling) return;
+    if (selected !== null) {
+      setSelected(null);
+      if (spreadRaw.get() < 0.7) spreadRaw.set(0.7);
+      return;
+    }
     setIsShuffling(true);
-    setSelected(null);
-    // Gather cards to center first
     const prevSpread = spreadRaw.get();
     spreadRaw.set(0);
     setTimeout(() => {
       setOrderedCards(shuffleArray(orderedCards));
       setTimeout(() => {
-        spreadRaw.set(prevSpread);
+        spreadRaw.set(prevSpread < 0.5 ? 0.7 : prevSpread);
         setIsShuffling(false);
       }, 300);
     }, 400);
@@ -170,16 +173,27 @@ export function Gallery() {
         transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => { e.stopPropagation(); handleShuffle(); }}
         disabled={isShuffling}
-        className="absolute top-8 right-8 sm:top-10 sm:right-10 flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] text-white/30 backdrop-blur-sm transition-all hover:border-white/15 hover:bg-white/[0.06] hover:text-white/50 active:scale-95 disabled:opacity-30"
+        className="absolute top-8 right-8 sm:top-10 sm:right-10 flex items-center gap-2 rounded-full px-4 py-2 text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] text-white/30 transition-all hover:text-white/60 active:scale-95 disabled:opacity-30"
         style={{ zIndex: 55 }}
       >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
-          <path d="M1 10L4 7L1 4" />
-          <path d="M1 10H9" />
-          <path d="M13 4L10 7L13 10" />
-          <path d="M13 4H5" />
-        </svg>
-        Shuffle
+        {selected !== null ? (
+          <>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+              <path d="M4 4L10 10M10 4L4 10" />
+            </svg>
+            Back
+          </>
+        ) : (
+          <>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
+              <path d="M1 10L4 7L1 4" />
+              <path d="M1 10H9" />
+              <path d="M13 4L10 7L13 10" />
+              <path d="M13 4H5" />
+            </svg>
+            Shuffle
+          </>
+        )}
       </motion.button>
 
       {/* Overlay */}
@@ -191,7 +205,7 @@ export function Gallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 bg-black/20"
             style={{ zIndex: 40 }}
           />
         )}

@@ -96,7 +96,7 @@ export function GlassCard({
         marginLeft: -w / 2,
         marginTop: -h / 2,
         zIndex: isSelected ? 60 : anySelected ? 1 : index + 1,
-        opacity: anySelected && !isSelected ? 0.1 : 1,
+        opacity: anySelected && !isSelected ? 0.35 : 1,
         transition: "opacity 0.4s ease",
         cursor: "pointer",
       }}
