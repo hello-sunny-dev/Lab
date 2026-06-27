@@ -8,7 +8,7 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { cards } from "@/data/cards";
+import { cards, type CardData } from "@/data/cards";
 import { GlassCard } from "./GlassCard";
 
 const SCENE_SPRING = { stiffness: 40, damping: 30 };
@@ -25,9 +25,20 @@ function useIsMobile() {
   return m;
 }
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export function Gallery() {
   const [mounted, setMounted] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
+  const [orderedCards, setOrderedCards] = useState<CardData[]>(cards);
+  const [isShuffling, setIsShuffling] = useState(false);
   const isMobile = useIsMobile();
 
   const mx = useMotionValue(0.5);
@@ -44,7 +55,21 @@ export function Gallery() {
   const g1L = useTransform(mx, [0, 1], ["15%", "55%"]);
   const g1T = useTransform(my, [0, 1], ["15%", "45%"]);
 
-  const hintOpacity = useTransform(spread, [0, 0.6], [1, 0]);
+  function handleShuffle() {
+    if (isShuffling) return;
+    setIsShuffling(true);
+    setSelected(null);
+    // Gather cards to center first
+    const prevSpread = spreadRaw.get();
+    spreadRaw.set(0);
+    setTimeout(() => {
+      setOrderedCards(shuffleArray(orderedCards));
+      setTimeout(() => {
+        spreadRaw.set(prevSpread);
+        setIsShuffling(false);
+      }, 300);
+    }, 400);
+  }
 
   useEffect(() => setMounted(true), []);
 
@@ -145,6 +170,25 @@ export function Gallery() {
         </motion.h1>
       </div>
 
+      {/* Shuffle button */}
+      <motion.button
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+        onClick={(e) => { e.stopPropagation(); handleShuffle(); }}
+        disabled={isShuffling}
+        className="absolute top-8 right-8 sm:top-10 sm:right-10 flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] text-white/30 backdrop-blur-sm transition-all hover:border-white/15 hover:bg-white/[0.06] hover:text-white/50 active:scale-95 disabled:opacity-30"
+        style={{ zIndex: 55 }}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
+          <path d="M1 10L4 7L1 4" />
+          <path d="M1 10H9" />
+          <path d="M13 4L10 7L13 10" />
+          <path d="M13 4H5" />
+        </svg>
+        Shuffle
+      </motion.button>
+
       {/* Overlay */}
       <AnimatePresence>
         {selected !== null && (
@@ -173,7 +217,7 @@ export function Gallery() {
           transformStyle: "preserve-3d",
         }}
       >
-        {cards.map((card, i) => (
+        {orderedCards.map((card, i) => (
           <GlassCard
             key={card.id}
             card={card}
@@ -187,17 +231,17 @@ export function Gallery() {
         ))}
       </motion.div>
 
-      {/* Scroll hint */}
+      {/* Scroll hint — always visible, fades when card selected */}
       <motion.div
-        className="absolute bottom-10 sm:bottom-10 flex flex-col items-center gap-2"
-        style={{ zIndex: 20, opacity: hintOpacity }}
+        className="absolute bottom-8 flex flex-col items-center gap-2 transition-opacity duration-300"
+        style={{ zIndex: 20, opacity: selected !== null ? 0 : 1 }}
       >
         <motion.div
-          animate={{ y: [0, 10, 0] }}
+          animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-1"
         >
-          <svg width="20" height="32" viewBox="0 0 20 32" className="text-white/30 sm:text-white/15">
+          <svg width="20" height="32" viewBox="0 0 20 32" className="text-white/25">
             <rect x="5" y="0" width="10" height="20" rx="5" stroke="currentColor" strokeWidth="1.5" fill="none" />
             <motion.circle
               cx="10" cy="8"
@@ -209,7 +253,7 @@ export function Gallery() {
             <path d="M6 24L10 28L14 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
           </svg>
         </motion.div>
-        <p className="text-[11px] sm:text-[9px] font-medium tracking-[0.2em] uppercase text-white/40 sm:text-white/15">
+        <p className="text-[11px] sm:text-[9px] font-medium tracking-[0.2em] uppercase text-white/30 sm:text-white/15">
           {isMobile ? "Swipe up & down" : "Scroll to explore"}
         </p>
       </motion.div>
