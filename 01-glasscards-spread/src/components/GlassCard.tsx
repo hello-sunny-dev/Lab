@@ -19,7 +19,7 @@ interface Props {
   slot: { position: { x: number; y: number }; rotation: number };
   spread: MotionValue<number>;
   isSelected: boolean;
-  anySelected: boolean;
+  selectedId: number | null;
   onSelect: (id: number | null) => void;
   isMobile: boolean;
 }
@@ -30,10 +30,11 @@ export function GlassCard({
   slot,
   spread,
   isSelected,
-  anySelected,
+  selectedId,
   onSelect,
   isMobile,
 }: Props) {
+  const anySelected = selectedId !== null;
   const ref = useRef<HTMLDivElement>(null);
   const localMx = useMotionValue(0.5);
   const localMy = useMotionValue(0.5);
@@ -75,6 +76,7 @@ export function GlassCard({
         e.stopPropagation();
         onSelect(isSelected ? null : card.id);
       }}
+      key={`${card.id}-${selectedId}`}
       animate={
         isSelected
           ? { x: 0, y: 0, scale: isMobile ? 1.15 : 1.2, rotateZ: 0 }

@@ -132,7 +132,12 @@ export function Gallery() {
   return (
     <div
       className="relative flex h-[100dvh] w-full items-center justify-center overflow-hidden bg-[#0a0a0c]"
-      onClick={() => selected !== null && setSelected(null)}
+      onClick={() => {
+        if (selected !== null) {
+          setSelected(null);
+          if (spreadRaw.get() < 0.7) spreadRaw.set(0.7);
+        }
+      }}
     >
       {/* BG glow */}
       <motion.div
@@ -213,7 +218,7 @@ export function Gallery() {
             slot={slots[i]}
             spread={spread}
             isSelected={selected === card.id}
-            anySelected={selected !== null}
+            selectedId={selected}
             onSelect={setSelected}
             isMobile={isMobile}
           />
