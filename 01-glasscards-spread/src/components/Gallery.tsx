@@ -47,9 +47,6 @@ export function Gallery() {
   const spreadRaw = useMotionValue(0.25);
   const spread = useSpring(spreadRaw, { stiffness: 80, damping: 25 });
 
-  const sceneRotateX = useSpring(useTransform(my, [0, 1], [4, -4]), SCENE_SPRING);
-  const sceneRotateY = useSpring(useTransform(mx, [0, 1], [-4, 4]), SCENE_SPRING);
-
   const bgX = useSpring(useTransform(mx, [0, 1], [30, -30]), SCENE_SPRING);
   const bgY = useSpring(useTransform(my, [0, 1], [30, -30]), SCENE_SPRING);
   const g1L = useTransform(mx, [0, 1], ["15%", "55%"]);
@@ -211,17 +208,16 @@ export function Gallery() {
         )}
       </AnimatePresence>
 
-      {/* Scene */}
-      <motion.div
+      {/* Scene — no mouse-driven tilt here: transforming the container
+          moves every card's hit area under the cursor, which makes the
+          cursor flicker pointer↔default while the mouse moves */}
+      <div
         className="relative"
         style={{
           width: isMobile ? 375 : 900,
           height: isMobile ? 550 : 600,
           perspective: 1400,
           zIndex: 45,
-          rotateX: isMobile || selected !== null ? 0 : sceneRotateX,
-          rotateY: isMobile || selected !== null ? 0 : sceneRotateY,
-          transformStyle: "preserve-3d",
         }}
       >
         {orderedCards.map((card, i) => (
@@ -237,7 +233,7 @@ export function Gallery() {
             isMobile={isMobile}
           />
         ))}
-      </motion.div>
+      </div>
 
       {/* Scroll hint — always visible, fades when card selected */}
       <motion.div
