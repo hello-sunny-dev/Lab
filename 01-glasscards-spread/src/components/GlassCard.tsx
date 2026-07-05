@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, type MouseEvent } from "react";
+import { useRef, useEffect, useState, type MouseEvent } from "react";
 import {
   motion,
   useMotionValue,
@@ -36,6 +36,7 @@ export function GlassCard({
 }: Props) {
   const anySelected = selectedId !== null;
   const ref = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
   const localMx = useMotionValue(0.5);
   const localMy = useMotionValue(0.5);
 
@@ -101,7 +102,8 @@ export function GlassCard({
     <motion.div
       ref={ref}
       onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => { setHovered(false); onLeave(); }}
       onClick={(e) => {
         e.stopPropagation();
         onSelect(isSelected ? null : card.id);
@@ -123,8 +125,8 @@ export function GlassCard({
       }}
       className="select-none"
     >
-      {/* Inner wrapper for 3D tilt — pointer-events none so the flat
-          outer div owns the hit area (prevents cursor flicker) */}
+      {/* Visual stack — pointer-events none so the flat, non-tilting outer
+          div is the only hit target (stable hit area = no cursor flicker) */}
       <motion.div
         className="pointer-events-none"
         style={{
@@ -133,9 +135,16 @@ export function GlassCard({
           transformStyle: "preserve-3d",
         }}
       >
+        {/* Wiggle layer — short bounce on hover, driven by hover state
+            (not whileHover, which needs pointer events) */}
+        <motion.div
+          animate={hovered && !isSelected && !isMobile ? { rotate: [0, -1.6, 1.6, -0.8, 0] } : { rotate: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
         <div
           className="relative overflow-hidden rounded-2xl sm:rounded-3xl transition-all duration-500"
           style={{
+            cursor: "pointer",
             width: w,
             height: h,
             background: isSelected
@@ -226,6 +235,7 @@ export function GlassCard({
             }}
           />
         </div>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
