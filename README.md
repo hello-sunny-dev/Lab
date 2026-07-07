@@ -15,12 +15,16 @@ Interactive glassmorphic cards with scroll-driven spread, 3D tilt, and click-to-
 - **Stack:** Next.js 16, Framer Motion, Tailwind CSS
 - **Key features:**
   - Scroll/swipe to spread/gather cards
-  - Click card → smooth center animation with accent color fill
-  - Per-card 3D tilt on hover with spring physics
-  - Shuffle button to randomize card positions
-  - Scene-level 3D tilt following cursor
+  - Click card → grows from its spot to center with accent color fill
+  - Per-card 3D tilt + wiggle on hover (visual layers only)
+  - Shuffle button reorders cards across layout slots; doubles as Back
+  - Background glow parallax following cursor
   - Mobile responsive with touch support
-- **Learned:** Framer Motion springs, `useMotionValue`/`useTransform` composition, separating layout slots from data for shuffle, hit area vs transform separation for 3D click targets
+- **Learned:**
+  - Framer Motion springs, `useMotionValue`/`useTransform` composition
+  - Never mix `animate` prop and `style` motion values on the same property
+  - Keep hit areas on flat, non-transforming elements — mouse-driven transforms on containers move hit targets under the cursor and cause cursor flicker
+  - Separate layout slots from card data so shuffle actually moves content
 
 ---
 
