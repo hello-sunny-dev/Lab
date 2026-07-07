@@ -28,16 +28,29 @@ Interactive glassmorphic cards with scroll-driven spread, 3D tilt, and click-to-
 
 ---
 
-### 02 — 3D Hero Landing `🔜 Next`
+### 02 — 3D Hero Landing `✅ Live`
 
-A premium landing page with a central 3D object, scroll-driven camera, and product-marketing interactions.
+**[View Live](https://02-3d-hero-landing.vercel.app)**
 
-- **Focus:** React Three Fiber, GLTF loading, scroll animation, camera movement
-- **Cloud:** CDN delivery for 3D models, Draco compression
+A premium landing page built around a single glass 3D object, with a camera choreographed entirely by scroll.
+
+- **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
+- **Key features:**
+  - Glass torus-knot with `MeshTransmissionMaterial` (real-time refraction + chromatic aberration)
+  - Scroll-driven camera orbiting ~160° and pulling back across 3 pages
+  - Three text sections flowing with the scroll (center / left / right)
+  - Procedural Lightformer environment — no remote HDR, renders instantly
+  - Directional scroll indicator (flips to "Scroll up" on the last page)
+  - Mobile-tuned: camera distance, geometry/sample resolution, capped DPR
+- **Learned:**
+  - R3F fundamentals — `Canvas`, `useFrame`, `useThree`, `ScrollControls`/`useScroll`
+  - Physically-based transmission materials and why `backside` sells the glass look
+  - Procedural env lighting to avoid multi-MB HDR downloads that blank the scene
+  - Keeping DOM overlays `pointer-events-none` and out of the Canvas
 
 ---
 
-### 03 — Scroll Storytelling `—`
+### 03 — Scroll Storytelling `🔜 Next`
 
 A narrative experience driven by scroll position, combining GSAP ScrollTrigger with R3F.
 
