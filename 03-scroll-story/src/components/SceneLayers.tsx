@@ -8,7 +8,7 @@ function Cloud({ className, scale = 1 }: { className?: string; scale?: number })
       style={{ width: 200 * scale }}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g fill="#ffffff">
+      <g fill="#fffaf3">
         <ellipse cx="60" cy="55" rx="45" ry="30" />
         <ellipse cx="110" cy="45" rx="52" ry="38" />
         <ellipse cx="155" cy="58" rx="38" ry="26" />
@@ -24,10 +24,10 @@ function Bird({ className }: { className?: string }) {
       <path
         d="M2 12 q8 -12 18 0 q10 -12 18 0"
         fill="none"
-        stroke="#3a2e2a"
+        stroke="#8a6b96"
         strokeWidth="2.5"
         strokeLinecap="round"
-        opacity="0.55"
+        opacity="0.5"
       />
     </svg>
   );

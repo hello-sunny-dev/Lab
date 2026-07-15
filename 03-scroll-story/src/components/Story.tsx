@@ -10,19 +10,19 @@ import { SceneLayers } from "./SceneLayers";
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin, useGSAP);
 
-// Sky gradients for each phase of the descent
+// Sky gradients for each phase of the drift — Pastel Dream (lavender → pink → peach → cream)
 const SKIES = [
-  "linear-gradient(180deg, #ffd6a5 0%, #ffadad 100%)",   // morning
-  "linear-gradient(180deg, #a0e7ff 0%, #cbb2ff 100%)",   // midday
-  "linear-gradient(180deg, #ffb56b 0%, #ff6f91 100%)",   // sunset
-  "linear-gradient(180deg, #b8f2c9 0%, #7bd88f 100%)",   // meadow
+  "linear-gradient(180deg, #e9dcf5 0%, #f0d3e8 100%)",   // lavender wake-up
+  "linear-gradient(180deg, #f0d3e8 0%, #f6cfe0 100%)",   // pink drift
+  "linear-gradient(180deg, #f6cfe0 0%, #fbe0c4 100%)",   // peach warmth
+  "linear-gradient(180deg, #fbe0c4 0%, #fff6ea 100%)",   // cream settle
 ];
 
 const SCENES = [
-  { kicker: "Up we go", title: "Meet Pip", body: "Three balloons, one very small traveller, and a very long way down." },
-  { kicker: "Through the clouds", title: "Soft and slow", body: "The wind takes its time up here. So does Pip." },
-  { kicker: "Golden hour", title: "The sky turns", body: "Everything glows for a moment before the ground says hello." },
-  { kicker: "Touchdown", title: "Made it.", body: "A meadow, a soft landing, and a story told entirely by scrolling." },
+  { kicker: "Rise and shine", title: "Meet Sunny", body: "A small sun, a soft sky, and nowhere in particular to be." },
+  { kicker: "Through lavender clouds", title: "Soft and slow", body: "The wind takes its time up here. So does Sunny." },
+  { kicker: "Peach light", title: "Everything warms", body: "Colours lean gold for a while before they settle." },
+  { kicker: "Cotton-candy landing", title: "Made it.", body: "A cloud bed, a soft glow, and a story told entirely by scrolling." },
 ];
 
 export function Story() {
@@ -96,16 +96,16 @@ export function Story() {
         repeat: -1,
         yoyo: true,
       });
-      gsap.to(".pip-balloons", {
-        rotation: 5,
+      gsap.to(".sunny-glow", {
+        scale: 1.06,
         duration: 3,
         ease: "sine.inOut",
         repeat: -1,
         yoyo: true,
-        transformOrigin: "100px 150px",
+        transformOrigin: "center",
       });
       // blink
-      gsap.to(".pip-eyes", {
+      gsap.to(".sunny-eyes", {
         scaleY: 0.1,
         duration: 0.09,
         repeat: -1,
@@ -160,7 +160,7 @@ export function Story() {
 
       {/* Character (fixed, centred). Layered so scroll-drift, idle-bob and
           the SVG's own part animations never fight over the same transform. */}
-      <div className="pointer-events-none fixed left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+      <div className="pointer-events-none fixed left-1/2 top-[24%] z-20 -translate-x-1/2 -translate-y-1/2 sm:top-1/2">
         <div ref={drift}>
           <div ref={bob}>
             <Character ref={character} />
@@ -173,18 +173,18 @@ export function Story() {
         {SCENES.map((s, i) => (
           <section
             key={i}
-            className={`scene flex h-screen w-full flex-col justify-center px-8 sm:px-20 ${
+            className={`scene flex h-screen w-full flex-col justify-end pb-20 px-8 sm:justify-center sm:pb-0 sm:px-20 ${
               i % 2 === 0 ? "items-start text-left" : "items-end text-right"
             }`}
           >
             <div className={i % 2 === 0 ? "" : "flex flex-col items-end"}>
-              <p className="reveal mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#3a2e2a]/40">
+              <p className="reveal mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#5b3f66]/45">
                 {s.kicker}
               </p>
-              <h2 className="reveal max-w-md text-4xl font-black tracking-tight text-[#3a2e2a] sm:text-6xl">
+              <h2 className="reveal max-w-md text-4xl font-black tracking-tight text-[#5b3f66] sm:text-6xl">
                 {s.title}
               </h2>
-              <p className="reveal mt-4 max-w-sm text-sm leading-relaxed text-[#3a2e2a]/60 sm:text-base">
+              <p className="reveal mt-4 max-w-sm text-sm leading-relaxed text-[#5b3f66]/65 sm:text-base">
                 {s.body}
               </p>
             </div>
