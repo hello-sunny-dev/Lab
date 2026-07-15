@@ -58,11 +58,18 @@ A narrative experience driven by scroll position, combining GSAP ScrollTrigger w
 
 ---
 
-### 04 — Product Exploder `—`
+### 04 — Product Exploder `🚧 Draft scaffold`
 
-An interactive exploded-view product experience with sequenced animations.
+A 35mm film camera, taken apart by hand: drag a slider to explode it into its named parts, orbit around it, hover any part for a one-line fact.
 
-- **Focus:** Complex animation choreography, product visualization
+- **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
+- **Key features (so far):**
+  - Slider-driven explode (0→1), each part flies out along its own vector/distance rather than a uniform offset
+  - Hover a part → highlight + dim the rest + floating label with name and fact
+  - Orbit camera, responsive distance for portrait/narrow viewports
+  - Procedural placeholder geometry (no remote assets) standing in for the real model
+- **Focus:** Complex animation choreography, product visualization, first project in the Lab to work with a named-part scene graph instead of a single procedural object
+- **Not yet done:** placeholder box/cylinder parts are standing in for a real sourced 3D model (film camera); narrative/copy polish; deploy
 
 ---
 

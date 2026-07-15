@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+html,
+body {
+  background: #c8c2b4;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(58, 46, 38, 0.2);
+  color: #3a2e26;
+}
+
+/* Studio backdrop: a soft vignette so the model reads as sitting on a
+   photography sweep rather than floating on a flat fill. */
+.studio-backdrop {
+  background: radial-gradient(
+    120% 90% at 50% 38%,
+    #ded8c9 0%,
+    #c8c2b4 55%,
+    #aca690 100%
+  );
+}
