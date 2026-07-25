@@ -50,35 +50,75 @@ A premium landing page built around a single glass 3D object, with a camera chor
 
 ---
 
-### 03 — Scroll Storytelling `🔜 Next`
+### 03 — Scroll Storytelling `🚧 Draft pushed`
 
-A narrative experience driven by scroll position, combining GSAP ScrollTrigger with R3F.
+A narrative experience driven by scroll position, combining GSAP ScrollTrigger with Lenis smooth scroll. A "Sunny" sun mascot drifts through a Pastel Dream sky (lavender → pink → peach → cream) across 4 scenes.
 
-- **Focus:** Storytelling, animation timelines, scroll-linked 3D transitions
-
----
-
-### 04 — Product Exploder `—`
-
-An interactive exploded-view product experience with sequenced animations.
-
-- **Focus:** Complex animation choreography, product visualization
+- **Stack:** Next.js 16, GSAP, Lenis, Tailwind CSS
+- **Key features (so far):** MotionPath character drift synced to scroll, scroll-velocity → character tilt, cross-fading sky gradient per scene, parallax cloud/bird layers, scene text reveals
+- **Focus:** Storytelling, animation timelines, scroll-linked transitions
+- **Not yet done:** real Lottie mascot (current sun is a placeholder SVG), deploy — pending Sunny's desktop review
 
 ---
 
-### 05 — Interactive Planet `—`
+### 04 — Product Exploder `🚧 Draft scaffold`
 
-A rotating 3D planet with custom shaders, dynamic lighting, and user interaction.
+A 35mm film camera, taken apart by hand: drag a slider to explode it into its named parts, orbit around it, hover any part for a one-line fact.
 
-- **Focus:** Shader programming, custom materials, scene composition
+- **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
+- **Key features (so far):**
+  - Slider-driven explode (0→1), each part flies out along its own vector/distance rather than a uniform offset
+  - Hover a part → highlight + dim the rest + floating label with name and fact
+  - Orbit camera, responsive distance for portrait/narrow viewports
+  - Procedural placeholder geometry (no remote assets) standing in for the real model
+- **Focus:** Complex animation choreography, product visualization, first project in the Lab to work with a named-part scene graph instead of a single procedural object
+- **Not yet done:** placeholder box/cylinder parts are standing in for a real sourced 3D model (film camera); narrative/copy polish; deploy
 
 ---
 
-### 06 — Interactive Room `—`
+### 05 — Interactive Planet `🚧 Draft scaffold`
 
-A room with interactive objects, environmental controls, and scene transitions.
+A small stylized planet, entirely hand-written GLSL — no textures, no `MeshStandardMaterial`. Terrain color bands come from simplex noise sampled directly on the sphere surface, clouds drift via a second noise layer scrolling over time, and the atmosphere is a Fresnel rim-light shell.
 
-- **Focus:** State management (Zustand), immersive UX, scene transitions
+- **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
+- **Key features (so far):**
+  - Custom `ShaderMaterial` terrain: noise-based elevation banded into ocean/lowland/highland/peak colors, lit with a simple directional Lambert term
+  - Second transparent shell for drifting clouds (noise scrolls over time in the fragment shader)
+  - Third shell for atmosphere glow — Fresnel term on `BackSide` geometry, careful with `dot(normal, viewDir)` sign since back-facing fragments flip it
+  - Drag-to-orbit + idle auto-rotate, procedural starfield backdrop (`drei`'s `Stars`, no remote HDR/texture)
+- **Focus:** Raw GLSL (vertex + fragment), simplex noise as a shading primitive, Fresnel rim lighting, multi-shell sphere compositing — first project in the Lab writing shader code directly instead of using prebuilt materials
+- **Not yet done:** deploy, possible interaction beyond orbit (day/night toggle, surface hotspots)
+
+---
+
+### 06 — Interactive Room `🚧 Draft scaffold`
+
+"Sunny's Desk" — a small isometric-ish desk scene (lamp, monitor, keyboard, mug, plant, window) with state shared across components via Zustand instead of local `useState`.
+
+- **Stack:** Next.js 16, React Three Fiber, Three.js, Zustand, Tailwind CSS
+- **Key features (so far):**
+  - Click the lamp → toggles a point light + emissive shade, shared through the store so the HUD button reflects the same state
+  - Click the window → flips day/night, driving ambient/directional light color and intensity plus floor/wall/sky color
+  - Click the monitor → toggles screen glow
+  - Click the desk (or the "Zoom in" HUD button) → camera transitions between a wide shot and a close desk shot, lerped in `useFrame` and reconciled with `OrbitControls`' own target so dragging still works after
+  - Same store read from inside the Canvas (meshes) and outside it (HUD buttons, hover label) — the actual point of using Zustand here over 04's local `useState`
+- **Focus:** State management (Zustand) shared across the R3F/DOM boundary, immersive UX, scene transitions
+- **Not yet done:** deploy, more objects/detail, possibly a second room
+
+---
+
+### 07 — Particle Morph `🚧 Draft scaffold`
+
+Thousands of particles spelling "LAB" — cursor nearby and they scatter away from it; click and they reform into Sunny's silhouette.
+
+- **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
+- **Key features (so far):**
+  - ~5,200 GPU points, each carrying two target positions (`aTargetA`/`aTargetB`) sampled by rasterizing text/a shape onto an offscreen 2D canvas and reading opaque pixel coordinates
+  - Morph between shapes is a vertex-shader `mix()` on a `uMorph` uniform lerped in `useFrame` — no per-particle JS loop
+  - Cursor repel: an invisible catcher plane's `onPointerMove` hands R3F's already-projected `event.point` straight to the shader as a uniform, no manual raycasting
+  - Orthographic camera with a responsive zoom so the field doesn't crop on portrait/mobile viewports
+- **Focus:** Large-scale GPU point rendering, canvas-to-particle-target sampling, GPU-side shape interpolation — first project in the Lab handling thousands of individually shader-driven elements at once
+- **Not yet done:** deploy, more than 2 target shapes, possibly color shift tied to which shape is active
 
 ---
 
