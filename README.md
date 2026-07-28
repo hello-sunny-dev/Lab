@@ -145,6 +145,23 @@ Thousands of particles spelling "LAB" — cursor nearby and they scatter away fr
 
 ---
 
+### 08 — Portfolio Hub `✅ Live`
+
+**[View Live](https://08-portfolio-hub.vercel.app)**
+
+The index for everything above — a terminal/directory-listing hub styled after `ls -la`, one line per project with its live link, description, and stack.
+
+- **Stack:** Next.js 16, Framer Motion, Tailwind CSS
+- **Key features:**
+  - Each project rendered as a directory-listing row (index, name, live status, stack tags, one-line description) instead of a card grid
+  - Compared 4 distinct visual directions via a rendered moodboard (dark glass / terminal directory / bento specimen board / blueprint schematic) before building — picked terminal directory for the "lab log" feel and because it doesn't repeat 01/02's glass look
+  - Staggered line-by-line reveal on load, hover-highlight per row, blinking cursor status line
+  - No 3D/WebGL — deliberately simple, monospace-first, to read as a log rather than another hero showcase
+- **Focus:** Information-dense index page, typography-led design, picking a visual identity through comparison rather than iteration-in-place
+- **Learned:** `framer-motion`'s `whileInView` needs a real scroll to fire its `IntersectionObserver` — a headless full-page screenshot taken right after page load won't trigger it for below-the-fold content, so rows stayed invisible; switched to a plain mount-triggered `animate` with a stagger delay instead
+
+---
+
 ## Stack
 
 - Next.js / React / TypeScript
@@ -166,5 +183,5 @@ Lab/
 ├── 05-interactive-planet/
 ├── 06-interactive-room/
 ├── 07-particle-morph/
-└── 08-portfolio-hub/    (next)
+└── 08-portfolio-hub/
 ```

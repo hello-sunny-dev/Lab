@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #16140f;
+  --ink: #e8dfc9;
+  --muted: #8a8570;
+  --dim: #5f5a48;
+  --accent: #d4c454;
+  --line: #322d20;
+  --dot: #4a4536;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-mono), ui-monospace, "SF Mono", "Cascadia Code", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(212, 196, 84, 0.25);
+  color: var(--ink);
+}
+
+@keyframes blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.cursor {
+  display: inline-block;
+  animation: blink 1.1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor { animation: none; opacity: 1; }
+}
