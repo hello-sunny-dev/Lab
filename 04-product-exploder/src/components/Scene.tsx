@@ -40,8 +40,9 @@ export function Scene({
   return (
     <>
       <color attach="background" args={["#c8c2b4"]} />
-      <ambientLight intensity={0.5} />
-      <spotLight position={[4, 6, 5]} intensity={90} angle={0.45} penumbra={0.8} />
+      <ambientLight intensity={0.4} />
+      <spotLight position={[4, 6, 5]} intensity={95} angle={0.45} penumbra={0.8} />
+      <spotLight position={[-3, 2, -4]} intensity={20} angle={0.5} penumbra={1} color="#fff4e0" />
 
       <CameraModel explode={explode} hovered={hovered} onHover={onHover} />
 
@@ -56,11 +57,14 @@ export function Scene({
         maxPolarAngle={Math.PI * 0.65}
       />
 
-      {/* Procedural studio lighting — no remote HDR to stall the first paint */}
-      <Environment resolution={256}>
+      {/* Procedural studio lighting — no remote HDR to stall the first paint.
+          This is what actually sells the clearcoat/metal finishes: reflections
+          come from here, direct lights above are just for shadow shape. */}
+      <Environment resolution={384}>
         <Lightformer intensity={5} position={[0, 5, 4]} scale={[10, 6, 1]} />
         <Lightformer intensity={2.5} position={[-6, 2, 2]} rotation-y={Math.PI / 2} scale={[8, 4, 1]} color="#fff4e0" />
         <Lightformer intensity={2.5} position={[6, 1, 1]} rotation-y={-Math.PI / 2} scale={[8, 4, 1]} color="#e8e2d4" />
+        <Lightformer intensity={1.5} position={[0, -3, -2]} rotation-x={Math.PI / 2} scale={[8, 8, 1]} color="#c8c2b4" />
       </Environment>
     </>
   );

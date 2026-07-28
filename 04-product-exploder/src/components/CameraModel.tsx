@@ -1,9 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
+import { getLeatherTexture } from "./textures";
+
+export type Finish = "leather" | "metal" | "glossy";
 
 export type PartDef = {
   id: string;
@@ -13,6 +17,7 @@ export type PartDef = {
   explodeDir: [number, number, number];
   distance: number;
   color: string;
+  finish: Finish;
   geometry:
     | { kind: "box"; args: [number, number, number] }
     | { kind: "cylinder"; args: [number, number, number]; axis?: "x" | "y" | "z" };
@@ -29,7 +34,8 @@ export const PARTS: PartDef[] = [
     position: [0, 0, 0],
     explodeDir: [0, 0, 0],
     distance: 0,
-    color: "#2b2b2b",
+    color: "#3a3632",
+    finish: "leather",
     geometry: { kind: "box", args: [2.4, 1.4, 1.0] },
   },
   {
@@ -39,7 +45,8 @@ export const PARTS: PartDef[] = [
     position: [0, -0.05, 0.9],
     explodeDir: [0, 0, 1],
     distance: 1.7,
-    color: "#1c1c1c",
+    color: "#141414",
+    finish: "glossy",
     geometry: { kind: "cylinder", args: [0.42, 0.42, 1.0], axis: "z" },
   },
   {
@@ -49,7 +56,8 @@ export const PARTS: PartDef[] = [
     position: [0, 0.85, -0.15],
     explodeDir: [0, 1, 0],
     distance: 1.1,
-    color: "#242424",
+    color: "#2f2f2f",
+    finish: "metal",
     geometry: { kind: "box", args: [0.7, 0.5, 0.6] },
   },
   {
@@ -59,7 +67,8 @@ export const PARTS: PartDef[] = [
     position: [0.85, 0.78, -0.1],
     explodeDir: [0.4, 1, -0.2],
     distance: 1.2,
-    color: "#3a3a3a",
+    color: "#c9c2b0",
+    finish: "metal",
     geometry: { kind: "cylinder", args: [0.22, 0.22, 0.18], axis: "y" },
   },
   {
@@ -70,6 +79,7 @@ export const PARTS: PartDef[] = [
     explodeDir: [0.3, 1, 0.4],
     distance: 1.4,
     color: "#b23b2e",
+    finish: "glossy",
     geometry: { kind: "cylinder", args: [0.07, 0.07, 0.12], axis: "y" },
   },
   {
@@ -79,7 +89,8 @@ export const PARTS: PartDef[] = [
     position: [0, 0, -0.55],
     explodeDir: [0, 0, -1],
     distance: 1.5,
-    color: "#242424",
+    color: "#3a3632",
+    finish: "leather",
     geometry: { kind: "box", args: [2.2, 1.3, 0.12] },
   },
   {
@@ -89,7 +100,8 @@ export const PARTS: PartDef[] = [
     position: [-1.25, 0.2, 0],
     explodeDir: [-1, 0.15, 0],
     distance: 1.0,
-    color: "#555555",
+    color: "#8a8a8a",
+    finish: "metal",
     geometry: { kind: "cylinder", args: [0.12, 0.12, 0.14], axis: "x" },
   },
   {
@@ -99,7 +111,8 @@ export const PARTS: PartDef[] = [
     position: [1.25, 0.2, 0],
     explodeDir: [1, 0.15, 0],
     distance: 1.0,
-    color: "#555555",
+    color: "#8a8a8a",
+    finish: "metal",
     geometry: { kind: "cylinder", args: [0.12, 0.12, 0.14], axis: "x" },
   },
 ];
@@ -126,6 +139,30 @@ function Part({
   const isDimmed = hovered !== null && hovered !== part.id;
   const isHovered = hovered === part.id;
 
+  const geometry = useMemo(() => {
+    if (part.geometry.kind === "box") {
+      const [w, h, d] = part.geometry.args;
+      // Rounded rather than sharp edges — the single biggest thing that
+      // reads as "hand-placed primitive" instead of a manufactured part.
+      const radius = Math.min(0.08, Math.min(w, h, d) * 0.12);
+      return new RoundedBoxGeometry(w, h, d, 4, radius);
+    }
+    const [rTop, rBottom, height] = part.geometry.args;
+    return new THREE.CylinderGeometry(rTop, rBottom, height, 48);
+  }, [part.geometry]);
+
+  const leatherTexture = useMemo(
+    () => (part.finish === "leather" ? getLeatherTexture() : null),
+    [part.finish]
+  );
+
+  const materialProps: Partial<THREE.MeshPhysicalMaterialParameters> =
+    part.finish === "leather"
+      ? { roughness: 0.85, metalness: 0, clearcoat: 0.15, clearcoatRoughness: 0.6, roughnessMap: leatherTexture ?? undefined, bumpMap: leatherTexture ?? undefined, bumpScale: 0.004 }
+      : part.finish === "metal"
+        ? { roughness: 0.35, metalness: 0.85, clearcoat: 0.3, clearcoatRoughness: 0.25 }
+        : { roughness: 0.12, metalness: 0.15, clearcoat: 0.9, clearcoatRoughness: 0.08 };
+
   useFrame((_, delta) => {
     if (!mesh.current) return;
     target.current.set(
@@ -147,6 +184,7 @@ function Part({
       ref={mesh}
       position={part.position}
       rotation={part.geometry.kind === "cylinder" ? AXIS_ROTATION[part.geometry.axis ?? "y"] : [0, 0, 0]}
+      geometry={geometry}
       onPointerOver={(e) => {
         e.stopPropagation();
         onHover(part.id);
@@ -156,21 +194,13 @@ function Part({
         onHover(null);
       }}
     >
-      {part.geometry.kind === "box" ? (
-        <boxGeometry args={part.geometry.args} />
-      ) : (
-        <cylinderGeometry
-          args={[part.geometry.args[0], part.geometry.args[1], part.geometry.args[2], 32]}
-        />
-      )}
-      <meshStandardMaterial
+      <meshPhysicalMaterial
         color={part.color}
-        roughness={0.4}
-        metalness={0.6}
         emissive="#ffd23f"
         emissiveIntensity={0}
         transparent
         opacity={1}
+        {...materialProps}
       />
       {isHovered && (
         <Html distanceFactor={8} occlude={false} className="pointer-events-none">

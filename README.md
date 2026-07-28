@@ -67,9 +67,9 @@ A 35mm film camera, taken apart by hand: drag a slider to explode it into its na
   - Slider-driven explode (0→1), each part flies out along its own vector/distance rather than a uniform offset
   - Hover a part → highlight + dim the rest + floating label with name and fact
   - Orbit camera, responsive distance for portrait/narrow viewports
-  - Procedural placeholder geometry (no remote assets) standing in for the real model
+  - Procedural placeholder geometry (no remote assets), rounded (`RoundedBoxGeometry`) rather than sharp-edged, with per-part clearcoat materials (leather/metal/glossy) and a procedural canvas-generated grain texture standing in for real leatherette
 - **Focus:** Complex animation choreography, product visualization, first project in the Lab to work with a named-part scene graph instead of a single procedural object
-- **Not yet done:** placeholder box/cylinder parts are standing in for a real sourced 3D model (film camera); narrative/copy polish; deploy
+- **Not yet done:** placeholder parts (now nicely finished, still not a real camera model); narrative/copy polish; deploy
 
 ---
 

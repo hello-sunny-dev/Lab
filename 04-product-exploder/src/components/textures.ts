@@ -1,0 +1,39 @@
+"use client";
+
+import * as THREE from "three";
+
+// A cheap, effective trick for de-plasticizing a flat material: a small
+// procedural grain texture used as both roughnessMap and bumpMap. Real
+// leatherette camera wrap is exactly this — irregular pebbled speckle,
+// not a flat color. Generated once and cached (module scope, browser-only —
+// this file is only ever imported by client components).
+let leatherTexture: THREE.CanvasTexture | null = null;
+
+export function getLeatherTexture(): THREE.CanvasTexture {
+  if (leatherTexture) return leatherTexture;
+
+  const size = 128;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  ctx.fillStyle = "#8a8a8a";
+  ctx.fillRect(0, 0, size, size);
+  for (let i = 0; i < 900; i++) {
+    const x = Math.random() * size;
+    const y = Math.random() * size;
+    const r = 0.6 + Math.random() * 1.3;
+    const shade = Math.floor(90 + Math.random() * 90);
+    ctx.fillStyle = `rgb(${shade},${shade},${shade})`;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(6, 4);
+  leatherTexture = texture;
+  return texture;
+}
