@@ -10,7 +10,7 @@ const HOVER_LABELS: Record<string, string> = {
   monitor: "Monitor — click to toggle screen",
   lamp: "Lamp — click to toggle",
   window: "Window — click to flip day/night",
-  mug: "Mug — just a mug",
+  mouse: "Mouse — just a mouse",
   plant: "Plant — also just a plant",
 };
 

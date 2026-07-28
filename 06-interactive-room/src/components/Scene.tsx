@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Environment, Lightformer } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Room } from "./Room";
 import { useRoomStore } from "@/store/roomStore";
@@ -51,6 +51,14 @@ export function Scene() {
       />
 
       <Room />
+
+      {/* Procedural lighting for reflections — clearcoat/metal materials
+          read as dull plastic without something in the environment to
+          actually reflect. No remote HDR, just a couple of Lightformers. */}
+      <Environment resolution={192}>
+        <Lightformer intensity={2.5} position={[0, 4, 2]} scale={[6, 4, 1]} color={isDay ? "#fff4e0" : "#4a5a8f"} />
+        <Lightformer intensity={1.2} position={[-3, 1.5, 3]} rotation-y={Math.PI / 3} scale={[4, 3, 1]} color="#ffd23f" />
+      </Environment>
 
       <CameraRig controlsRef={controlsRef} />
       <OrbitControls

@@ -93,7 +93,7 @@ A small stylized planet, entirely hand-written GLSL — no textures, no `MeshSta
 
 ### 06 — Interactive Room `🚧 Draft scaffold`
 
-"Sunny's Desk" — a small isometric-ish desk scene (lamp, monitor, keyboard, mug, plant, window) with state shared across components via Zustand instead of local `useState`.
+"Sunny's Desk" — a small isometric-ish office desk scene (lamp, monitor, keyboard, mouse, plant, window, area rug) with state shared across components via Zustand instead of local `useState`.
 
 - **Stack:** Next.js 16, React Three Fiber, Three.js, Zustand, Tailwind CSS
 - **Key features (so far):**
@@ -102,6 +102,8 @@ A small stylized planet, entirely hand-written GLSL — no textures, no `MeshSta
   - Click the monitor → toggles screen glow
   - Click the desk (or the "Zoom in" HUD button) → camera transitions between a wide shot and a close desk shot, lerped in `useFrame` and reconciled with `OrbitControls`' own target so dragging still works after
   - Same store read from inside the Canvas (meshes) and outside it (HUD buttons, hover label) — the actual point of using Zustand here over 04's local `useState`
+  - Rounded geometry throughout, `meshPhysicalMaterial` with procedural canvas textures (wood grain desk/floor, plaster-grain walls, a generated keyboard key-grid), and an `Environment`/`Lightformer` setup so the clearcoat/metal finishes have something to reflect
+  - Recessed monitor bezel + foot plate, a bushy multi-cluster plant, a clean office-style window with real frame depth and a sill, a bordered area rug under the desk
 - **Focus:** State management (Zustand) shared across the R3F/DOM boundary, immersive UX, scene transitions
 - **Not yet done:** deploy, more objects/detail, possibly a second room
 
