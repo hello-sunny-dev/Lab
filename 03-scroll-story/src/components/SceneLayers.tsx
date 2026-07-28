@@ -8,7 +8,7 @@ function Cloud({ className, scale = 1 }: { className?: string; scale?: number })
       style={{ width: 200 * scale }}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g fill="#ffffff">
+      <g fill="#fffaf3">
         <ellipse cx="60" cy="55" rx="45" ry="30" />
         <ellipse cx="110" cy="45" rx="52" ry="38" />
         <ellipse cx="155" cy="58" rx="38" ry="26" />
@@ -24,11 +24,28 @@ function Bird({ className }: { className?: string }) {
       <path
         d="M2 12 q8 -12 18 0 q10 -12 18 0"
         fill="none"
-        stroke="#3a2e2a"
+        stroke="#8a6b96"
         strokeWidth="2.5"
         strokeLinecap="round"
-        opacity="0.55"
+        opacity="0.5"
       />
+    </svg>
+  );
+}
+
+// Fixed positions (not random) so server/client markup match on first render.
+const STARS: Array<[number, number, number]> = [
+  [6, 8, 2.2], [14, 22, 1.4], [22, 5, 1.8], [31, 34, 1.2], [40, 12, 2],
+  [52, 28, 1.5], [61, 6, 1.8], [70, 20, 1.3], [78, 36, 2.1], [86, 10, 1.5],
+  [92, 24, 1.8], [10, 42, 1.3], [46, 40, 1.6], [66, 44, 1.4],
+];
+
+function Stars() {
+  return (
+    <svg className="stars pointer-events-none absolute inset-0 h-full w-full opacity-0" xmlns="http://www.w3.org/2000/svg">
+      {STARS.map(([x, y, r], i) => (
+        <circle key={i} cx={`${x}%`} cy={`${y}%`} r={r} fill="#f0eaff" />
+      ))}
     </svg>
   );
 }
@@ -38,6 +55,7 @@ function Bird({ className }: { className?: string }) {
 export function SceneLayers() {
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
+      <Stars />
       {/* far clouds */}
       <div className="parallax absolute left-[8%] top-[14%] opacity-80" data-depth="0.15">
         <Cloud scale={0.7} />
