@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+html,
+body {
+  background: #151310;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(255, 222, 182, 0.25);
+  color: #f2ece0;
+}
+
+/* Studio backdrop: a dark vignette so the camera reads as a lit hero
+   object on a stage, rather than floating on a flat fill. */
+.studio-backdrop {
+  background: radial-gradient(
+    120% 90% at 50% 38%,
+    #2a251c 0%,
+    #17140f 55%,
+    #0a0806 100%
+  );
+}
