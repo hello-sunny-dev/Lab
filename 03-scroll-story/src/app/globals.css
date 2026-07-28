@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 html {
-  background: #efe1f7;
+  background: #bfe0f5;
 }
 
 body {
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-  color: #5b3f66;
+  color: #4a3a5c;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
