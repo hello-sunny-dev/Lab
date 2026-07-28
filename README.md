@@ -68,6 +68,7 @@ A 35mm film camera, taken apart by hand: drag a slider to explode it into its na
   - Hover a part → highlight + dim the rest + floating label with name and fact
   - Orbit camera, responsive distance for portrait/narrow viewports
   - Procedural placeholder geometry (no remote assets), rounded (`RoundedBoxGeometry`) rather than sharp-edged, with per-part clearcoat materials (leather/metal/glossy) and a procedural canvas-generated grain texture standing in for real leatherette
+  - Dark studio backdrop with a procedural floor light-pool (a dark contact shadow disappears into a dark background, so grounding comes from a bright glow instead)
 - **Focus:** Complex animation choreography, product visualization, first project in the Lab to work with a named-part scene graph instead of a single procedural object
 - **Not yet done:** placeholder parts (now nicely finished, still not a real camera model); narrative/copy polish; deploy
 

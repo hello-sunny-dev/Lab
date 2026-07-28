@@ -37,3 +37,31 @@ export function getLeatherTexture(): THREE.CanvasTexture {
   leatherTexture = texture;
   return texture;
 }
+
+// Soft radial "light pool" for the floor. On a dark backdrop a plain
+// ContactShadows blob (a dark smudge) disappears into the dark ground —
+// this gives the object something bright to visually sit in instead.
+let glowTexture: THREE.CanvasTexture | null = null;
+
+export function getGlowTexture(): THREE.CanvasTexture {
+  if (glowTexture) return glowTexture;
+
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  const gradient = ctx.createRadialGradient(
+    size / 2, size / 2, 0,
+    size / 2, size / 2, size / 2
+  );
+  gradient.addColorStop(0, "rgba(255,238,214,0.85)");
+  gradient.addColorStop(0.45, "rgba(255,222,182,0.32)");
+  gradient.addColorStop(1, "rgba(255,222,182,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+
+  glowTexture = new THREE.CanvasTexture(canvas);
+  return glowTexture;
+}

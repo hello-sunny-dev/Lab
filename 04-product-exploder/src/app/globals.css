@@ -2,7 +2,7 @@
 
 html,
 body {
-  background: #c8c2b4;
+  background: #151310;
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   height: 100dvh;
   overflow: hidden;
@@ -11,17 +11,17 @@ body {
 }
 
 ::selection {
-  background: rgba(58, 46, 38, 0.2);
-  color: #3a2e26;
+  background: rgba(255, 222, 182, 0.25);
+  color: #f2ece0;
 }
 
-/* Studio backdrop: a soft vignette so the model reads as sitting on a
-   photography sweep rather than floating on a flat fill. */
+/* Studio backdrop: a dark vignette so the camera reads as a lit hero
+   object on a stage, rather than floating on a flat fill. */
 .studio-backdrop {
   background: radial-gradient(
     120% 90% at 50% 38%,
-    #ded8c9 0%,
-    #c8c2b4 55%,
-    #aca690 100%
+    #2a251c 0%,
+    #17140f 55%,
+    #0a0806 100%
   );
 }

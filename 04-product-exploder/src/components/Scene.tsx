@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import { Environment, Lightformer, ContactShadows, OrbitControls } from "@react-three/drei";
 import { CameraModel } from "./CameraModel";
+import { getGlowTexture } from "./textures";
 
 const BASE_CAMERA_POS: [number, number, number] = [3.2, 1.8, 4.6];
 
@@ -39,14 +40,21 @@ export function Scene({
 }) {
   return (
     <>
-      <color attach="background" args={["#c8c2b4"]} />
-      <ambientLight intensity={0.4} />
-      <spotLight position={[4, 6, 5]} intensity={95} angle={0.45} penumbra={0.8} />
-      <spotLight position={[-3, 2, -4]} intensity={20} angle={0.5} penumbra={1} color="#fff4e0" />
+      <color attach="background" args={["#151310"]} />
+      <ambientLight intensity={0.28} />
+      <spotLight position={[4, 6, 5]} intensity={110} angle={0.4} penumbra={0.8} />
+      <spotLight position={[-3, 2, -4]} intensity={24} angle={0.5} penumbra={1} color="#fff4e0" />
 
       <CameraModel explode={explode} hovered={hovered} onHover={onHover} />
 
-      <ContactShadows position={[0, -0.85, 0]} opacity={0.45} scale={8} blur={2.4} far={2} />
+      {/* Light pool on the floor — a dark ContactShadows blob would vanish
+          into a dark background, so the object needs something bright to
+          visually sit in instead. */}
+      <mesh position={[0, -0.86, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[7, 7]} />
+        <meshBasicMaterial map={getGlowTexture()} transparent depthWrite={false} />
+      </mesh>
+      <ContactShadows position={[0, -0.85, 0]} opacity={0.5} scale={8} blur={2.4} far={2} />
 
       <ResponsiveCamera />
       <OrbitControls
@@ -64,7 +72,7 @@ export function Scene({
         <Lightformer intensity={5} position={[0, 5, 4]} scale={[10, 6, 1]} />
         <Lightformer intensity={2.5} position={[-6, 2, 2]} rotation-y={Math.PI / 2} scale={[8, 4, 1]} color="#fff4e0" />
         <Lightformer intensity={2.5} position={[6, 1, 1]} rotation-y={-Math.PI / 2} scale={[8, 4, 1]} color="#e8e2d4" />
-        <Lightformer intensity={1.5} position={[0, -3, -2]} rotation-x={Math.PI / 2} scale={[8, 8, 1]} color="#c8c2b4" />
+        <Lightformer intensity={1} position={[0, -3, -2]} rotation-x={Math.PI / 2} scale={[8, 8, 1]} color="#2a2118" />
       </Environment>
     </>
   );
