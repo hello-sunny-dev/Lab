@@ -117,6 +117,7 @@ Thousands of particles spelling "LAB" — cursor nearby and they scatter away fr
   - Morph between shapes is a vertex-shader `mix()` on a `uMorph` uniform lerped in `useFrame` — no per-particle JS loop
   - Cursor repel: an invisible catcher plane's `onPointerMove` hands R3F's already-projected `event.point` straight to the shader as a uniform, no manual raycasting
   - Orthographic camera with a responsive zoom so the field doesn't crop on portrait/mobile viewports
+  - Per-particle twinkle: each point's size/brightness oscillates at its own speed and phase (derived from a per-particle random value), not in unison — reads as sparkle rather than a strobe
 - **Focus:** Large-scale GPU point rendering, canvas-to-particle-target sampling, GPU-side shape interpolation — first project in the Lab handling thousands of individually shader-driven elements at once
 - **Not yet done:** deploy, more than 2 target shapes, possibly color shift tied to which shape is active
 

@@ -23,6 +23,7 @@ const ParticleMaterial = shaderMaterial(
     uniform vec3 uMouse;
     uniform float uTime;
     varying float vRandom;
+    varying float vTwinkle;
 
     void main() {
       vRandom = aRandom;
@@ -35,20 +36,27 @@ const ParticleMaterial = shaderMaterial(
       float repel = smoothstep(1.3, 0.0, dist);
       base.xy += normalize(toParticle + 1e-4) * repel * 1.1;
 
+      // Each particle twinkles at its own speed/phase (derived from
+      // aRandom) instead of every particle holding a constant brightness
+      // — that per-particle desync is what actually reads as "sparkle"
+      // rather than the whole field pulsing in unison.
+      vTwinkle = 0.5 + 0.5 * sin(uTime * (1.5 + aRandom * 4.5) + aRandom * 37.0);
+
       vec4 mvPosition = modelViewMatrix * vec4(base, 1.0);
-      gl_PointSize = 5.5 + aRandom * 4.0;
+      gl_PointSize = (4.5 + aRandom * 3.5) * (0.7 + vTwinkle * 0.7);
       gl_Position = projectionMatrix * mvPosition;
     }
   `,
   /* fragment */ `
     uniform vec3 uColor;
     varying float vRandom;
+    varying float vTwinkle;
     void main() {
       vec2 c = gl_PointCoord - vec2(0.5);
       float d = length(c);
       if (d > 0.5) discard;
-      float alpha = smoothstep(0.5, 0.1, d);
-      gl_FragColor = vec4(uColor * (0.8 + 0.35 * vRandom), alpha);
+      float alpha = smoothstep(0.5, 0.1, d) * (0.45 + 0.65 * vTwinkle);
+      gl_FragColor = vec4(uColor * (0.7 + 0.35 * vRandom) * (0.6 + 0.7 * vTwinkle), alpha);
     }
   `
 );
