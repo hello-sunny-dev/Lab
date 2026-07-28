@@ -128,7 +128,14 @@ const AtmosphereMaterial = shaderMaterial(
       vec3 color = mix(uColorDense, uColorThin, pow(fresnel, 0.6));
       float rim = pow(fresnel, 4.0);
       float haze = pow(fresnel, 1.15) * 0.3;
-      float alpha = clamp(rim + haze, 0.0, 1.0);
+      float glow = clamp(rim + haze, 0.0, 1.0);
+
+      // fresnel hits its max (1.0) exactly at the shell's own outer
+      // silhouette — without this, alpha peaks right where the geometry
+      // ends, which reads as a hard-edged ring instead of a fade. Taper
+      // back down to transparent before actually reaching that edge.
+      float edgeFade = smoothstep(1.0, 0.82, fresnel);
+      float alpha = glow * edgeFade;
 
       gl_FragColor = vec4(color, alpha * 0.85);
     }

@@ -7,7 +7,7 @@ import { Scene } from "./Scene";
 export function PlanetViewer() {
   return (
     <div className="relative h-[100dvh] w-full bg-[#0b0a16]">
-      <Canvas camera={{ position: [0, 0.35, 5.6], fov: 40 }} dpr={[1, 1.8]}>
+      <Canvas camera={{ position: [0, 0.35, 4.6], fov: 40 }} dpr={[1, 1.8]}>
         <Suspense fallback={null}>
           <Scene />
         </Suspense>

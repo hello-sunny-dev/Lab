@@ -5,7 +5,7 @@ import { useThree } from "@react-three/fiber";
 import { Stars, OrbitControls } from "@react-three/drei";
 import { Planet } from "./Planet";
 
-const BASE_DISTANCE = 5.6;
+const BASE_DISTANCE = 4.6;
 
 /** Narrow/portrait viewports get less horizontal FOV at any given
  *  distance than a wide desktop window does — without this the planet
