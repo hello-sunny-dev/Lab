@@ -1,0 +1,43 @@
+name: Deploy to Vercel
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: "Branch to check out and deploy from"
+        required: true
+      project_dir:
+        description: "Project subdirectory (e.g. 03-scroll-story)"
+        required: true
+      production:
+        description: "Deploy as production (aliases the project's .vercel.app domain)"
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Deploy to Vercel
+        working-directory: ${{ inputs.project_dir }}
+        run: |
+          set -e
+          if [ "${{ inputs.production }}" = "true" ]; then
+            FLAG="--prod"
+          else
+            FLAG=""
+          fi
+          URL=$(npx --yes vercel@latest deploy --token="${{ secrets.VERCEL_TOKEN }}" --yes $FLAG)
+          echo "### Deployed \`${{ inputs.project_dir }}\` (${{ inputs.target_ref }}) -> $URL" >> "$GITHUB_STEP_SUMMARY"
+          echo "DEPLOY_URL=$URL" >> "$GITHUB_ENV"
+
+      - name: Print URL
+        run: echo "Deployed at $DEPLOY_URL"
