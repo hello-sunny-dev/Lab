@@ -88,6 +88,7 @@ A small stylized planet, entirely hand-written GLSL — no textures, no `MeshSta
   - Second transparent shell for drifting clouds (fBm scrolls over time in the fragment shader)
   - Third shell for atmosphere glow — Fresnel term on `BackSide` geometry, careful with `dot(normal, viewDir)` sign since back-facing fragments flip it
   - Drag-to-orbit + idle auto-rotate, procedural starfield backdrop (`drei`'s `Stars`, no remote HDR/texture)
+  - Responsive camera distance so the planet keeps breathing room on portrait/mobile, not just desktop
 - **Focus:** Raw GLSL (vertex + fragment), fractal noise as a shading primitive, Fresnel rim lighting, multi-shell sphere compositing — first project in the Lab writing shader code directly instead of using prebuilt materials
 - **Not yet done:** deploy, possible interaction beyond orbit (day/night toggle, surface hotspots)
 
