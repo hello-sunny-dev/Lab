@@ -147,7 +147,7 @@ Thousands of particles spelling "LAB" — cursor nearby and they scatter away fr
 
 ### 08 — Portfolio Hub `✅ Live`
 
-**[View Live](https://08-portfolio-hub.vercel.app)**
+**[View Live](https://hello-sunny-dev-lab.vercel.app)**
 
 The index for everything above — a terminal/directory-listing hub styled after `ls -la`, one line per project with its live link, description, and stack.
 
