@@ -65,4 +65,20 @@ float snoise(vec3 v) {
   m = m * m;
   return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }
+
+// Fractal Brownian motion — sums several octaves of noise at doubling
+// frequency and halving amplitude. A single snoise() call reads as a
+// blobby marble; this is what gives terrain irregular, multi-scale detail
+// (continent shape at low frequency, coastline jaggedness and mountain
+// texture layered on top) instead of one smooth wave.
+float fbm(vec3 p) {
+  float value = 0.0;
+  float amplitude = 0.5;
+  for (int i = 0; i < 5; i++) {
+    value += amplitude * snoise(p);
+    p *= 2.02;
+    amplitude *= 0.5;
+  }
+  return value;
+}
 `;

@@ -11,10 +11,13 @@ const TerrainMaterial = shaderMaterial(
   /* vertex */ `
     varying vec3 vNormal;
     varying vec3 vPos;
+    varying vec3 vWorldPos;
     void main() {
       vNormal = normalize(normalMatrix * normal);
       vPos = position;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      vec4 worldPos = modelMatrix * vec4(position, 1.0);
+      vWorldPos = worldPos.xyz;
+      gl_Position = projectionMatrix * viewMatrix * worldPos;
     }
   `,
   /* fragment */ `
@@ -22,27 +25,45 @@ const TerrainMaterial = shaderMaterial(
     uniform vec3 uLightDir;
     varying vec3 vNormal;
     varying vec3 vPos;
+    varying vec3 vWorldPos;
 
     void main() {
       vec3 p = normalize(vPos);
-      float base = snoise(p * 1.35);
-      float detail = snoise(p * 4.5) * 0.35;
-      float elevation = base * 0.75 + detail * 0.25;
+      // fBm instead of a two-tap noise blend — real coastlines are jagged
+      // at several scales at once, not one smooth wave.
+      float elevation = fbm(p * 1.6);
 
-      vec3 deepOcean = vec3(0.13, 0.22, 0.38);
-      vec3 shallow   = vec3(0.30, 0.52, 0.55);
-      vec3 lowland   = vec3(0.55, 0.56, 0.30);
-      vec3 highland  = vec3(0.72, 0.45, 0.28);
-      vec3 peak      = vec3(0.92, 0.88, 0.82);
+      vec3 deepOcean = vec3(0.02, 0.09, 0.24);
+      vec3 shallow   = vec3(0.04, 0.32, 0.42);
+      vec3 lowland   = vec3(0.18, 0.40, 0.16);
+      vec3 highland  = vec3(0.42, 0.32, 0.16);
+      vec3 peak      = vec3(0.85, 0.84, 0.82);
 
+      // Tight bands right at sea level for a crisp coastline; softer up
+      // near the peaks where a real snowline gradient is more gradual.
       vec3 color = deepOcean;
-      color = mix(color, shallow, smoothstep(-0.20, -0.15, elevation));
-      color = mix(color, lowland, smoothstep(-0.05, 0.00, elevation));
-      color = mix(color, highland, smoothstep(0.22, 0.28, elevation));
+      color = mix(color, shallow, smoothstep(-0.05, -0.02, elevation));
+      color = mix(color, lowland, smoothstep(-0.015, 0.01, elevation));
+      color = mix(color, highland, smoothstep(0.24, 0.30, elevation));
       color = mix(color, peak, smoothstep(0.40, 0.46, elevation));
 
-      float diff = max(dot(normalize(vNormal), normalize(uLightDir)), 0.0);
-      color *= (0.4 + 0.6 * diff);
+      // Polar ice caps — driven by latitude (p.y), independent of elevation.
+      float lat = abs(p.y);
+      float polar = smoothstep(0.78, 0.92, lat);
+      color = mix(color, vec3(0.92, 0.94, 0.98), polar);
+
+      vec3 N = normalize(vNormal);
+      vec3 L = normalize(uLightDir);
+      float diff = max(dot(N, L), 0.0);
+      color *= (0.35 + 0.65 * diff);
+
+      // Ocean glint: a tight specular highlight only where it's water,
+      // so oceans read as reflective/wet against matte land.
+      float isOcean = 1.0 - smoothstep(-0.03, -0.005, elevation);
+      vec3 V = normalize(cameraPosition - vWorldPos);
+      vec3 H = normalize(L + V);
+      float spec = pow(max(dot(N, H), 0.0), 60.0) * isOcean * diff;
+      color += vec3(0.9, 0.95, 1.0) * spec * 0.8;
 
       gl_FragColor = vec4(color, 1.0);
     }
@@ -64,9 +85,9 @@ const CloudMaterial = shaderMaterial(
     varying vec3 vPos;
 
     void main() {
-      vec3 p = normalize(vPos) + vec3(uTime * 0.025, 0.0, 0.0);
-      float n = snoise(p * 3.2);
-      float alpha = smoothstep(0.18, 0.55, n) * 0.8;
+      vec3 p = normalize(vPos) + vec3(uTime * 0.02, 0.0, 0.0);
+      float n = fbm(p * 2.4);
+      float alpha = smoothstep(0.05, 0.45, n) * 0.75;
       gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
     }
   `

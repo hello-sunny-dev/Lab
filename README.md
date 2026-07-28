@@ -78,15 +78,17 @@ A 35mm film camera, taken apart by hand: drag a slider to explode it into its na
 
 ### 05 — Interactive Planet `🚧 Draft scaffold`
 
-A small stylized planet, entirely hand-written GLSL — no textures, no `MeshStandardMaterial`. Terrain color bands come from simplex noise sampled directly on the sphere surface, clouds drift via a second noise layer scrolling over time, and the atmosphere is a Fresnel rim-light shell.
+A small stylized planet, entirely hand-written GLSL — no textures, no `MeshStandardMaterial`. Terrain comes from fractal-noise elevation banded into ocean/lowland/highland/peak, with polar ice caps and ocean specular glint; clouds drift via a second fBm layer scrolling over time; the atmosphere is a Fresnel rim-light shell.
 
 - **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
 - **Key features (so far):**
-  - Custom `ShaderMaterial` terrain: noise-based elevation banded into ocean/lowland/highland/peak colors, lit with a simple directional Lambert term
-  - Second transparent shell for drifting clouds (noise scrolls over time in the fragment shader)
+  - Custom `ShaderMaterial` terrain: `fbm()` (5-octave fractal Brownian motion, not a single noise tap) drives elevation, banded into ocean/lowland/highland/peak colors with a crisp sea-level coastline and a softer snowline
+  - Latitude-driven polar ice caps, independent of elevation
+  - Ocean-only Blinn-Phong specular glint (wet/reflective water against matte land)
+  - Second transparent shell for drifting clouds (fBm scrolls over time in the fragment shader)
   - Third shell for atmosphere glow — Fresnel term on `BackSide` geometry, careful with `dot(normal, viewDir)` sign since back-facing fragments flip it
   - Drag-to-orbit + idle auto-rotate, procedural starfield backdrop (`drei`'s `Stars`, no remote HDR/texture)
-- **Focus:** Raw GLSL (vertex + fragment), simplex noise as a shading primitive, Fresnel rim lighting, multi-shell sphere compositing — first project in the Lab writing shader code directly instead of using prebuilt materials
+- **Focus:** Raw GLSL (vertex + fragment), fractal noise as a shading primitive, Fresnel rim lighting, multi-shell sphere compositing — first project in the Lab writing shader code directly instead of using prebuilt materials
 - **Not yet done:** deploy, possible interaction beyond orbit (day/night toggle, surface hotspots)
 
 ---
