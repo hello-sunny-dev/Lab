@@ -1,0 +1,30 @@
+name: Add Vercel Domain Alias
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: "Vercel project name (e.g. 08-portfolio-hub)"
+        required: true
+      domain:
+        description: "Domain/alias to add (e.g. hello-sunny-dev-lab.vercel.app)"
+        required: true
+
+jobs:
+  add-domain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add domain to project
+        run: |
+          set -e
+          http_code=$(curl -sS -o response.json -w "%{http_code}" -X POST \
+            "https://api.vercel.com/v10/projects/${{ inputs.project }}/domains" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"name\":\"${{ inputs.domain }}\"}")
+          echo "HTTP $http_code"
+          cat response.json
+          echo "### Add domain (\`${{ inputs.domain }}\` -> \`${{ inputs.project }}\`): HTTP $http_code" >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat response.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
