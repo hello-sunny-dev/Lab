@@ -86,7 +86,7 @@ A small stylized planet, entirely hand-written GLSL — no textures, no `MeshSta
   - Latitude-driven polar ice caps, independent of elevation
   - Ocean-only Blinn-Phong specular glint (wet/reflective water against matte land)
   - Second transparent shell for drifting clouds (fBm scrolls over time in the fragment shader)
-  - Third shell for atmosphere glow — Fresnel term on `BackSide` geometry, careful with `dot(normal, viewDir)` sign since back-facing fragments flip it
+  - Third shell for atmosphere glow — two-color gradient (dense pale blue near the surface fading to a deeper thin blue further out) plus two summed Fresnel-power terms (tight bright rim + soft wide haze) so it reads as layered atmosphere, not a flat ring; `BackSide` geometry, careful with `dot(normal, viewDir)` sign since back-facing fragments flip it
   - Drag-to-orbit + idle auto-rotate, procedural starfield backdrop (`drei`'s `Stars`, no remote HDR/texture)
   - Responsive camera distance so the planet keeps breathing room on portrait/mobile, not just desktop
 - **Focus:** Raw GLSL (vertex + fragment), fractal noise as a shading primitive, Fresnel rim lighting, multi-shell sphere compositing — first project in the Lab writing shader code directly instead of using prebuilt materials

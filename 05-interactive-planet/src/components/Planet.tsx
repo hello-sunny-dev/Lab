@@ -94,7 +94,10 @@ const CloudMaterial = shaderMaterial(
 );
 
 const AtmosphereMaterial = shaderMaterial(
-  { uColor: new THREE.Color("#8fc7ff") },
+  {
+    uColorDense: new THREE.Color("#dcefff"),
+    uColorThin: new THREE.Color("#2f5f9e"),
+  },
   /* vertex */ `
     varying vec3 vNormal;
     varying vec3 vViewDir;
@@ -106,7 +109,8 @@ const AtmosphereMaterial = shaderMaterial(
     }
   `,
   /* fragment */ `
-    uniform vec3 uColor;
+    uniform vec3 uColorDense;
+    uniform vec3 uColorThin;
     varying vec3 vNormal;
     varying vec3 vViewDir;
     void main() {
@@ -114,8 +118,19 @@ const AtmosphereMaterial = shaderMaterial(
       // negative across most of the visible shell — abs() keeps the glow
       // confined to the grazing silhouette instead of flooding the disc.
       float ndotv = dot(normalize(vNormal), normalize(vViewDir));
-      float fresnel = pow(1.0 - abs(ndotv), 3.2);
-      gl_FragColor = vec4(uColor, fresnel * 0.75);
+      float fresnel = 1.0 - abs(ndotv);
+
+      // A flat single color read as a hard blue "ring." Real atmosphere
+      // grades from pale/bright close to the surface (more air in the
+      // sightline) to a deeper, thinner blue further out into space —
+      // and it's two glows layered, not one falloff curve: a tight bright
+      // rim right at the limb, plus a much softer, wider haze beyond it.
+      vec3 color = mix(uColorDense, uColorThin, pow(fresnel, 0.6));
+      float rim = pow(fresnel, 4.0);
+      float haze = pow(fresnel, 1.15) * 0.3;
+      float alpha = clamp(rim + haze, 0.0, 1.0);
+
+      gl_FragColor = vec4(color, alpha * 0.85);
     }
   `
 );
@@ -145,7 +160,7 @@ export function Planet() {
       <mesh ref={clouds} geometry={geometry} scale={1.015}>
         <cloudMaterial ref={cloudMat} transparent depthWrite={false} />
       </mesh>
-      <mesh geometry={geometry} scale={1.09}>
+      <mesh geometry={geometry} scale={1.18}>
         {/* @ts-expect-error -- custom shaderMaterial JSX element registered via extend() */}
         <atmosphereMaterial transparent side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
