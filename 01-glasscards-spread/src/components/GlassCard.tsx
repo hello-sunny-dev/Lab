@@ -148,7 +148,7 @@ export function GlassCard({
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
         <div
-          className="relative overflow-hidden rounded-2xl sm:rounded-3xl transition-[background,box-shadow] duration-500"
+          className="relative overflow-hidden rounded-2xl sm:rounded-3xl transition-[background,box-shadow] duration-300"
           style={{
             cursor: "pointer",
             width: w,
@@ -165,11 +165,11 @@ export function GlassCard({
         >
           {/* Accent glow — only when selected */}
           <div
-            className="absolute -right-10 -top-10 h-40 w-40 rounded-full blur-3xl transition-opacity duration-700"
+            className="absolute -right-10 -top-10 h-40 w-40 rounded-full blur-3xl transition-opacity duration-300"
             style={{ background: card.accentColor, opacity: isSelected ? 0.4 : 0 }}
           />
           <div
-            className="absolute -left-10 bottom-0 h-32 w-32 rounded-full blur-3xl transition-opacity duration-700"
+            className="absolute -left-10 bottom-0 h-32 w-32 rounded-full blur-3xl transition-opacity duration-300"
             style={{ background: card.accentColor, opacity: isSelected ? 0.2 : 0 }}
           />
 
@@ -179,7 +179,7 @@ export function GlassCard({
             <div>
               <div className="flex items-center justify-between">
                 <span
-                  className="text-lg sm:text-xl transition-colors duration-500"
+                  className="text-lg sm:text-xl transition-colors duration-300"
                   style={{ color: isSelected ? card.accentColor : "rgba(255,255,255,0.3)" }}
                 >
                   {card.icon}
@@ -189,13 +189,13 @@ export function GlassCard({
                 </span>
               </div>
               <p
-                className="mt-4 sm:mt-5 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-500"
+                className="mt-4 sm:mt-5 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.2em] transition-colors duration-300"
                 style={{ color: isSelected ? `rgba(${card.accentRgb}, 0.7)` : "rgba(255,255,255,0.25)" }}
               >
                 {card.subtitle}
               </p>
               <h3
-                className="mt-1 text-xl sm:text-2xl font-semibold tracking-tight transition-colors duration-500"
+                className="mt-1 text-xl sm:text-2xl font-semibold tracking-tight transition-colors duration-300"
                 style={{ color: isSelected ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.7)" }}
               >
                 {card.title}
@@ -233,7 +233,7 @@ export function GlassCard({
 
           {/* Inner border */}
           <div
-            className="absolute inset-0 rounded-2xl sm:rounded-3xl transition-shadow duration-500"
+            className="absolute inset-0 rounded-2xl sm:rounded-3xl transition-shadow duration-300"
             style={{
               boxShadow: isSelected
                 ? `inset 0 0 0 1px rgba(${card.accentRgb}, 0.25)`

@@ -285,19 +285,19 @@ export function Story() {
           >
             <div className={i % 2 === 0 ? "" : "flex flex-col items-end"}>
               <p
-                className="reveal mb-3 text-xs font-semibold uppercase tracking-[0.3em] transition-colors duration-500"
+                className="reveal mb-3 text-xs font-semibold uppercase tracking-[0.3em] transition-colors duration-300"
                 style={{ color: s.inkMuted }}
               >
                 {s.kicker}
               </p>
               <h2
-                className="reveal max-w-md text-4xl font-black tracking-tight transition-colors duration-500 sm:text-6xl"
+                className="reveal max-w-md text-4xl font-black tracking-tight transition-colors duration-300 sm:text-6xl"
                 style={{ color: s.ink }}
               >
                 {s.title}
               </h2>
               <p
-                className="reveal mt-4 max-w-sm text-sm leading-relaxed transition-colors duration-500 sm:text-base"
+                className="reveal mt-4 max-w-sm text-sm leading-relaxed transition-colors duration-300 sm:text-base"
                 style={{ color: s.inkMuted }}
               >
                 {s.body}
