@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useThree } from "@react-three/fiber";
 import { Stars, OrbitControls } from "@react-three/drei";
 import { Planet } from "./Planet";
@@ -26,7 +26,21 @@ function ResponsiveCamera() {
   return null;
 }
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const cb = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", cb);
+    return () => mq.removeEventListener("change", cb);
+  }, []);
+  return reduced;
+}
+
 export function Scene() {
+  const reducedMotion = usePrefersReducedMotion();
+
   return (
     <>
       <color attach="background" args={["#0b0a16"]} />
@@ -44,7 +58,7 @@ export function Scene() {
         enableZoom={true}
         minDistance={3.2}
         maxDistance={11}
-        autoRotate
+        autoRotate={!reducedMotion}
         autoRotateSpeed={0.6}
         rotateSpeed={0.6}
       />

@@ -6,6 +6,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useReducedMotion,
   AnimatePresence,
 } from "framer-motion";
 import { cards, slots, type CardData } from "@/data/cards";
@@ -40,6 +41,7 @@ export function Gallery() {
   const [orderedCards, setOrderedCards] = useState<CardData[]>(cards);
   const [isShuffling, setIsShuffling] = useState(false);
   const isMobile = useIsMobile();
+  const reducedMotion = useReducedMotion();
 
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
@@ -241,8 +243,8 @@ export function Gallery() {
         style={{ zIndex: 20, opacity: selected !== null ? 0 : 1 }}
       >
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          animate={reducedMotion ? { y: 0 } : { y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: reducedMotion ? 0 : Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-1"
         >
           <svg width="20" height="32" viewBox="0 0 20 32" className="text-white/25">
@@ -251,8 +253,8 @@ export function Gallery() {
               cx="10" cy="8"
               r="2"
               fill="currentColor"
-              animate={{ cy: [7, 13, 7] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              animate={reducedMotion ? { cy: 8 } : { cy: [7, 13, 7] }}
+              transition={{ duration: 2, repeat: reducedMotion ? 0 : Infinity, ease: "easeInOut" }}
             />
             <path d="M6 24L10 28L14 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
           </svg>

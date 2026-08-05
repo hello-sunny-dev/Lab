@@ -6,6 +6,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useReducedMotion,
   type MotionValue,
 } from "framer-motion";
 import type { CardData } from "@/data/cards";
@@ -37,6 +38,7 @@ export function GlassCard({
   const anySelected = selectedId !== null;
   const ref = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
+  const reducedMotion = useReducedMotion();
   const localMx = useMotionValue(0.5);
   const localMy = useMotionValue(0.5);
 
@@ -138,7 +140,11 @@ export function GlassCard({
         {/* Wiggle layer — short bounce on hover, driven by hover state
             (not whileHover, which needs pointer events) */}
         <motion.div
-          animate={hovered && !isSelected && !isMobile ? { rotate: [0, -1.6, 1.6, -0.8, 0] } : { rotate: 0 }}
+          animate={
+            hovered && !isSelected && !isMobile && !reducedMotion
+              ? { rotate: [0, -1.6, 1.6, -0.8, 0] }
+              : { rotate: 0 }
+          }
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
         <div

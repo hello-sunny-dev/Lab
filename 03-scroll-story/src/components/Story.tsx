@@ -63,6 +63,10 @@ export function Story() {
 
   useGSAP(
     () => {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
       // Sky cross-fade across the whole scroll.
       // Note: "X% top" positions are a fraction of the TRIGGER's own height,
       // not of the scrollable distance. With N equal-height (h-screen)
@@ -146,62 +150,69 @@ export function Story() {
         },
       });
 
-      // Scroll velocity → tilt. Fast scroll = more lean.
-      const tiltTo = gsap.quickTo(drift.current, "rotation", {
-        duration: 0.5,
-        ease: "power3.out",
-      });
-      ScrollTrigger.create({
-        trigger: root.current,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          const v = self.getVelocity();
-          tiltTo(gsap.utils.clamp(-14, 14, -v / 180));
-        },
-      });
+      // Scroll velocity → tilt. Fast scroll = more lean. Skipped under
+      // reduced motion — a page-wide lean tied to scroll speed is exactly
+      // the kind of motion that setting asks to remove.
+      if (!prefersReducedMotion) {
+        const tiltTo = gsap.quickTo(drift.current, "rotation", {
+          duration: 0.5,
+          ease: "power3.out",
+        });
+        ScrollTrigger.create({
+          trigger: root.current,
+          start: "top top",
+          end: "bottom bottom",
+          onUpdate: (self) => {
+            const v = self.getVelocity();
+            tiltTo(gsap.utils.clamp(-14, 14, -v / 180));
+          },
+        });
+      }
 
-      // Idle bob + balloon sway (independent of scroll)
-      gsap.to(bob.current, {
-        y: 14,
-        duration: 2.2,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-      });
-      gsap.to(".sunny-glow", {
-        scale: 1.06,
-        duration: 3,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        transformOrigin: "center",
-      });
-      // blink
-      gsap.to(".sunny-eyes", {
-        scaleY: 0.1,
-        duration: 0.09,
-        repeat: -1,
-        yoyo: true,
-        repeatDelay: 2.6,
-        transformOrigin: "center",
-      });
-      gsap.to(".moon-glow", {
-        scale: 1.05,
-        duration: 3.6,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        transformOrigin: "center",
-      });
-      gsap.to(".moon-eyes", {
-        scaleY: 0.1,
-        duration: 0.09,
-        repeat: -1,
-        yoyo: true,
-        repeatDelay: 3.4,
-        transformOrigin: "center",
-      });
+      // Idle bob + glow pulse + blink — all continuous, autoplaying loops,
+      // independent of scroll. Skipped under reduced motion; the character
+      // stays put instead of endlessly bobbing/pulsing/blinking.
+      if (!prefersReducedMotion) {
+        gsap.to(bob.current, {
+          y: 14,
+          duration: 2.2,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+        gsap.to(".sunny-glow", {
+          scale: 1.06,
+          duration: 3,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          transformOrigin: "center",
+        });
+        gsap.to(".sunny-eyes", {
+          scaleY: 0.1,
+          duration: 0.09,
+          repeat: -1,
+          yoyo: true,
+          repeatDelay: 2.6,
+          transformOrigin: "center",
+        });
+        gsap.to(".moon-glow", {
+          scale: 1.05,
+          duration: 3.6,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          transformOrigin: "center",
+        });
+        gsap.to(".moon-eyes", {
+          scaleY: 0.1,
+          duration: 0.09,
+          repeat: -1,
+          yoyo: true,
+          repeatDelay: 3.4,
+          transformOrigin: "center",
+        });
+      }
 
       // Parallax decorative layers
       gsap.utils.toArray<HTMLElement>(".parallax").forEach((el) => {
