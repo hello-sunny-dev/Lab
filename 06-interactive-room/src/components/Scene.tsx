@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Environment, Lightformer } from "@react-three/drei";
@@ -13,10 +13,23 @@ const VIEWS = {
   desk: { pos: new THREE.Vector3(0.75, 1.05, 1.35), look: new THREE.Vector3(0, 0.78, -0.15) },
 };
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const cb = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", cb);
+    return () => mq.removeEventListener("change", cb);
+  }, []);
+  return reduced;
+}
+
 function CameraRig({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl | null> }) {
   const view = useRoomStore((s) => s.view);
   const { camera } = useThree();
   const transitioning = useRef(true);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     transitioning.current = true;
@@ -25,7 +38,10 @@ function CameraRig({ controlsRef }: { controlsRef: React.RefObject<OrbitControls
   useFrame((_, delta) => {
     if (!transitioning.current || !controlsRef.current) return;
     const { pos, look } = VIEWS[view];
-    const t = Math.min(1, delta * 3);
+    // Reduced motion: cut straight to the target instead of panning the
+    // camera through the room — a moving 3D viewpoint is exactly the kind
+    // of motion that setting asks to avoid.
+    const t = reducedMotion ? 1 : Math.min(1, delta * 3);
     camera.position.lerp(pos, t);
     controlsRef.current.target.lerp(look, t);
     controlsRef.current.update();
