@@ -172,7 +172,7 @@ export function Gallery() {
         transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => { e.stopPropagation(); handleShuffle(); }}
         disabled={isShuffling}
-        className="absolute top-8 right-8 sm:top-10 sm:right-10 flex items-center gap-2 rounded-full px-4 py-2 text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] text-white/30 transition-all hover:text-white/60 active:scale-95 disabled:opacity-30"
+        className="absolute top-8 right-8 sm:top-10 sm:right-10 flex items-center gap-2 rounded-full px-4 py-2 text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] text-white/30 transition-[color,transform] hover:text-white/60 active:scale-95 disabled:opacity-30"
         style={{ zIndex: 55, cursor: isShuffling ? "default" : "pointer" }}
       >
         {selected !== null ? (

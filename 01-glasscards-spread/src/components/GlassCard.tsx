@@ -148,7 +148,7 @@ export function GlassCard({
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
         <div
-          className="relative overflow-hidden rounded-2xl sm:rounded-3xl transition-all duration-500"
+          className="relative overflow-hidden rounded-2xl sm:rounded-3xl transition-[background,box-shadow] duration-500"
           style={{
             cursor: "pointer",
             width: w,
@@ -233,7 +233,7 @@ export function GlassCard({
 
           {/* Inner border */}
           <div
-            className="absolute inset-0 rounded-2xl sm:rounded-3xl transition-all duration-500"
+            className="absolute inset-0 rounded-2xl sm:rounded-3xl transition-shadow duration-500"
             style={{
               boxShadow: isSelected
                 ? `inset 0 0 0 1px rgba(${card.accentRgb}, 0.25)`
