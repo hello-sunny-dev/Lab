@@ -236,7 +236,7 @@ export function Story() {
           opacity: 0,
           duration: 0.9,
           ease: "power3.out",
-          stagger: 0.12,
+          stagger: 0.07,
           scrollTrigger: { trigger: s, start: "top 65%" },
         });
       });
