@@ -20,12 +20,16 @@ export type PartDef = {
   finish: Finish;
   geometry:
     | { kind: "box"; args: [number, number, number] }
-    | { kind: "cylinder"; args: [number, number, number]; axis?: "x" | "y" | "z" };
+    | { kind: "cylinder"; args: [number, number, number]; axis?: "x" | "y" | "z" }
+    | { kind: "prism"; args: [number, number, number] };
 };
 
-// A 35mm SLR, taken apart into the pieces worth naming. Placeholder
-// procedural geometry — swaps for a sourced GLTF once one's picked, but the
-// explode/hover mechanism here doesn't change when that happens.
+// A 35mm SLR, taken apart into the pieces worth naming. Procedural
+// geometry, tuned by hand for silhouette rather than sourced from a scan —
+// the lens is built as separate mount/barrel/ring/glass pieces (not one
+// cylinder) so both the resting shape AND the explode sequence read as a
+// real lens, and the viewfinder hump is a real triangular roof instead of
+// a box sitting on top.
 export const PARTS: PartDef[] = [
   {
     id: "body",
@@ -39,26 +43,81 @@ export const PARTS: PartDef[] = [
     geometry: { kind: "box", args: [2.4, 1.4, 1.0] },
   },
   {
-    id: "lens",
-    name: "Lens",
-    fact: "50mm f/1.8 — the “nifty fifty.”",
-    position: [0, -0.05, 0.9],
+    id: "lens-mount",
+    name: "Lens mount",
+    fact: "Bayonet mount — quarter-turn to lock onto the body.",
+    position: [0, -0.05, 0.56],
     explodeDir: [0, 0, 1],
-    distance: 1.7,
-    color: "#141414",
+    distance: 0.85,
+    color: "#1c1c1c",
+    finish: "metal",
+    geometry: { kind: "cylinder", args: [0.46, 0.46, 0.1], axis: "z" },
+  },
+  {
+    id: "lens-barrel",
+    name: "Lens barrel",
+    fact: "50mm f/1.8 — the “nifty fifty.”",
+    position: [0, -0.05, 0.92],
+    explodeDir: [0, 0, 1],
+    distance: 1.15,
+    color: "#171717",
     finish: "glossy",
-    geometry: { kind: "cylinder", args: [0.42, 0.42, 1.0], axis: "z" },
+    geometry: { kind: "cylinder", args: [0.4, 0.38, 0.62], axis: "z" },
+  },
+  {
+    id: "lens-ring",
+    name: "Focus ring",
+    fact: "Turn to pull focus — by feel, without looking away from the frame.",
+    position: [0, -0.05, 1.16],
+    explodeDir: [0, 0, 1],
+    distance: 1.4,
+    color: "#232323",
+    finish: "metal",
+    geometry: { kind: "cylinder", args: [0.41, 0.41, 0.09], axis: "z" },
+  },
+  {
+    id: "lens-glass",
+    name: "Front element",
+    fact: "Coated glass — that faint purple tint is the anti-reflective coating.",
+    position: [0, -0.05, 1.31],
+    explodeDir: [0, 0, 1],
+    distance: 1.65,
+    color: "#0d1a2b",
+    finish: "glossy",
+    geometry: { kind: "cylinder", args: [0.36, 0.36, 0.05], axis: "z" },
   },
   {
     id: "prism",
     name: "Viewfinder prism",
     fact: "Five internal reflections stand the image upright.",
-    position: [0, 0.85, -0.15],
+    position: [0, 0.68, -0.15],
     explodeDir: [0, 1, 0],
     distance: 1.1,
     color: "#2f2f2f",
     finish: "metal",
-    geometry: { kind: "box", args: [0.7, 0.5, 0.6] },
+    geometry: { kind: "prism", args: [0.72, 0.4, 0.62] },
+  },
+  {
+    id: "hotshoe",
+    name: "Hot shoe",
+    fact: "Mounts an external flash — bypasses the built-in metering.",
+    position: [0, 1.1, -0.18],
+    explodeDir: [0, 1, 0],
+    distance: 1.0,
+    color: "#141414",
+    finish: "metal",
+    geometry: { kind: "box", args: [0.22, 0.08, 0.3] },
+  },
+  {
+    id: "rewind",
+    name: "Rewind knob",
+    fact: "Fold out and crank to rewind the film before opening the back.",
+    position: [-0.85, 0.78, -0.1],
+    explodeDir: [-0.4, 1, -0.2],
+    distance: 1.2,
+    color: "#c9c2b0",
+    finish: "metal",
+    geometry: { kind: "cylinder", args: [0.19, 0.19, 0.16], axis: "y" },
   },
   {
     id: "dial",
@@ -146,6 +205,27 @@ function Part({
       // reads as "hand-placed primitive" instead of a manufactured part.
       const radius = Math.min(0.08, Math.min(w, h, d) * 0.12);
       return new RoundedBoxGeometry(w, h, d, 4, radius);
+    }
+    if (part.geometry.kind === "prism") {
+      const [width, height, depth] = part.geometry.args;
+      // A real pentaprism roof silhouette — a triangular cross-section
+      // extruded front-to-back — instead of a box floating on top of the
+      // body. Bevelled so the ridge isn't a razor edge.
+      const shape = new THREE.Shape();
+      shape.moveTo(-width / 2, 0);
+      shape.lineTo(width / 2, 0);
+      shape.lineTo(0, height);
+      shape.closePath();
+      const geo = new THREE.ExtrudeGeometry(shape, {
+        depth,
+        bevelEnabled: true,
+        bevelThickness: 0.025,
+        bevelSize: 0.025,
+        bevelSegments: 2,
+        curveSegments: 1,
+      });
+      geo.translate(0, 0, -depth / 2);
+      return geo;
     }
     const [rTop, rBottom, height] = part.geometry.args;
     return new THREE.CylinderGeometry(rTop, rBottom, height, 48);
