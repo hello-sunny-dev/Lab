@@ -123,14 +123,29 @@ export function LabIndex() {
   const heroCopyRef = useRef<HTMLDivElement>(null);
   const indexRef = useRef<HTMLDivElement>(null);
 
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const applyPhase = (v: number) => {
     const span = (from: number, to: number) =>
       Math.min(1, Math.max(0, (v - from) / (to - from)));
+
     const hero = String(1 - span(0.34, 0.5));
-    const index = String(span(0.54, 0.68));
     if (heroBaseRef.current) heroBaseRef.current.style.opacity = hero;
     if (heroCopyRef.current) heroCopyRef.current.style.opacity = hero;
-    if (indexRef.current) indexRef.current.style.opacity = index;
+
+    // The index is cut in, not faded — by the time it arrives the slab is
+    // already solid violet, so there is nothing for a fade to happen against.
+    if (indexRef.current) indexRef.current.style.opacity = v >= 0.53 ? "1" : "0";
+
+    // Each line rises out of its own overflow mask, one after the next.
+    const rise = (p: number) => `translateY(${((1 - p) * 105).toFixed(2)}%)`;
+    if (headRef.current) headRef.current.style.transform = rise(span(0.53, 0.62));
+    rowRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const start = 0.56 + i * 0.028;
+      el.style.transform = rise(span(start, start + 0.1));
+    });
   };
 
   useEffect(() => {
@@ -190,30 +205,49 @@ export function LabIndex() {
         >
           {/* the persistent chrome already names the page — a second header
               here just stacks on top of it */}
-          <h2 className="mt-10 text-center text-2xl font-black tracking-tight sm:mt-14 sm:text-4xl">
-            THE INDEX
-          </h2>
+          <div className="overflow-hidden">
+            <h2
+              ref={headRef}
+              className="mt-8 text-center text-xl font-black tracking-tight sm:mt-14 sm:text-4xl"
+            >
+              THE INDEX
+            </h2>
+          </div>
 
-          <ul className="mt-6 sm:mt-8">
-            {PROJECTS.map((project) => (
-              <li key={project.slug}>
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  tabIndex={indexLive ? 0 : -1}
-                  className="group grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-white/25 py-3 opacity-60 transition-opacity duration-200 hover:opacity-100 focus-visible:opacity-100 sm:gap-6 sm:py-4"
+          <ul className="mt-5 sm:mt-8">
+            {PROJECTS.map((project, i) => (
+              <li
+                key={project.slug}
+                className="overflow-hidden border-t border-white/25"
+              >
+                <div
+                  ref={(el) => {
+                    rowRefs.current[i] = el;
+                  }}
                 >
-                  <span className="text-right text-lg font-black tracking-tight transition-transform duration-300 group-hover:-translate-x-1.5 sm:text-3xl">
-                    {project.title}
-                  </span>
-                  <span className="inline-flex h-6 w-11 items-center justify-center border border-white/50 font-mono text-[10px] transition-colors duration-200 group-hover:bg-[color:var(--paper)] group-hover:text-[color:var(--violet)]">
-                    {project.number}
-                  </span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] opacity-80 sm:text-[11px]">
-                    {project.kind}
-                  </span>
-                </a>
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={indexLive ? 0 : -1}
+                    className="group grid grid-cols-[auto_1fr] items-center gap-3 py-2.5 opacity-70 transition-opacity duration-200 hover:opacity-100 focus-visible:opacity-100 sm:grid-cols-[1fr_auto_1fr] sm:gap-6 sm:py-3.5"
+                  >
+                    <span className="order-2 text-base font-black tracking-tight transition-transform duration-300 group-hover:translate-x-1 sm:order-1 sm:text-right sm:text-3xl sm:group-hover:translate-x-0 sm:group-hover:-translate-x-1.5">
+                      {project.title}
+                    </span>
+                    <span className="order-1 inline-flex h-6 w-11 items-center justify-center border border-white/50 font-mono text-[10px] transition-colors duration-200 group-hover:bg-[color:var(--paper)] group-hover:text-[color:var(--violet)] sm:order-2">
+                      {project.number}
+                    </span>
+                    <span className="order-3 hidden sm:block">
+                      <span className="block font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">
+                        {project.kind}
+                      </span>
+                      <span className="mt-1 block text-[13px] leading-snug">
+                        {project.summary}
+                      </span>
+                    </span>
+                  </a>
+                </div>
               </li>
             ))}
           </ul>

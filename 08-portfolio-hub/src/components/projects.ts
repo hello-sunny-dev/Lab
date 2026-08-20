@@ -4,6 +4,8 @@ export type Project = {
   title: string;
   /** Short label shown beside the title in the index. */
   kind: string;
+  /** One line, shown next to the title on wide screens. */
+  summary: string;
   description: string;
   stack: string[];
   url: string;
@@ -14,6 +16,7 @@ export const PROJECTS: Project[] = [
     number: "01",
     slug: "glasscards-spread",
     kind: "Interface study",
+    summary: "Cards that spread and tilt as you scroll.",
     title: "GlassCards Spread",
     description:
       "Interactive glassmorphic cards with scroll-driven spread, 3D tilt, and click-to-reveal interactions.",
@@ -24,6 +27,7 @@ export const PROJECTS: Project[] = [
     number: "02",
     slug: "3d-hero-landing",
     kind: "Landing system",
+    summary: "One glass object, camera driven by scroll.",
     title: "3D Hero Landing",
     description:
       "A premium landing page built around a single glass 3D object, camera choreographed by scroll.",
@@ -34,6 +38,7 @@ export const PROJECTS: Project[] = [
     number: "03",
     slug: "scroll-story",
     kind: "Narrative scroll",
+    summary: "A day passing — sun crossfades into moon.",
     title: "Scroll Storytelling",
     description:
       "A day passing, told entirely by scrolling — sun crossfades into moon as the sky goes from morning to night.",
@@ -44,6 +49,7 @@ export const PROJECTS: Project[] = [
     number: "04",
     slug: "product-exploder",
     kind: "Product teardown",
+    summary: "A film camera taken apart, part by part.",
     title: "Product Exploder",
     description:
       "A 35mm film camera taken apart by hand — drag to explode into named parts, hover for facts.",
@@ -54,6 +60,7 @@ export const PROJECTS: Project[] = [
     number: "05",
     slug: "interactive-planet",
     kind: "Shader study",
+    summary: "Hand-written GLSL terrain and atmosphere.",
     title: "Interactive Planet",
     description:
       "A stylized planet in hand-written GLSL — noise-shaded terrain, drifting clouds, Fresnel atmosphere.",
@@ -64,6 +71,7 @@ export const PROJECTS: Project[] = [
     number: "06",
     slug: "interactive-room",
     kind: "Scene system",
+    summary: "A desk that switches between day and night.",
     title: "Interactive Room",
     description:
       "\"Sunny's Desk\" — a small office scene with lamp, monitor, and window state shared via Zustand.",
@@ -74,6 +82,7 @@ export const PROJECTS: Project[] = [
     number: "07",
     slug: "particle-morph",
     kind: "GPU experiment",
+    summary: "Particles morphing from text into a figure.",
     title: "Particle Morph",
     description:
       "Thousands of GPU particles spelling \"LAB\" — scatter from the cursor, morph into Sunny's silhouette.",
