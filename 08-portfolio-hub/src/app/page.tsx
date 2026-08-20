@@ -1,5 +1,5 @@
-import { TerminalListing } from "@/components/TerminalListing";
+import { LabIndex } from "@/components/LabIndex";
 
 export default function Home() {
-  return <TerminalListing />;
+  return <LabIndex />;
 }

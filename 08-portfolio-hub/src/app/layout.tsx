@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const mono = JetBrains_Mono({
+const display = Archivo({
+  variable: "--font-display",
+  subsets: ["latin"],
+});
+
+const mono = IBM_Plex_Mono({
   variable: "--font-mono",
+  weight: ["400", "500"],
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "hello-sunny-dev/lab",
+  title: "Sunny's Lab",
   description:
-    "A collection of weekend-sized creative frontend experiments — interactive experiences, motion, WebGL, and spatial UI.",
+    "An ongoing side practice — motion, material and the browser. Seven frontend experiments, each about one idea, all of them live.",
 };
 
 export default function RootLayout({
@@ -19,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${mono.variable} antialiased`}>
+    <html lang="en" className={`${display.variable} ${mono.variable} antialiased`}>
       <body>{children}</body>
     </html>
   );
