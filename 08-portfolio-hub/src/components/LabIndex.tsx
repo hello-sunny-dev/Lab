@@ -161,7 +161,7 @@ export function LabIndex() {
     <div ref={page} className="relative h-[220vh] bg-[color:var(--paper)]">
       <div
         ref={stage}
-        className="sticky top-0 h-screen overflow-hidden text-[color:var(--ink)]"
+        className="sticky top-0 h-[100dvh] overflow-hidden text-[color:var(--ink)]"
       >
         {/* spine */}
         <div className="pointer-events-none absolute inset-y-0 left-1/2 z-[1] w-px bg-[color:var(--ink)] opacity-[0.16]" />
@@ -205,22 +205,27 @@ export function LabIndex() {
         >
           {/* the persistent chrome already names the page — a second header
               here just stacks on top of it */}
-          <div className="overflow-hidden">
+          <div className="shrink-0 overflow-hidden">
             <h2
               ref={headRef}
-              className="mt-8 text-center text-xl font-black tracking-tight sm:mt-14 sm:text-4xl"
+              className="mt-8 text-center text-2xl font-black tracking-tight sm:mt-12 sm:text-4xl"
             >
               THE INDEX
             </h2>
           </div>
 
-          <ul className="mt-5 sm:mt-8">
+          {/* Rows share whatever height is left, so the list always reaches
+              the bottom of the screen instead of bunching at the top. Each
+              keeps a floor; when the floors no longer fit — a short phone —
+              the list scrolls rather than being squeezed or clipped. */}
+          <ul className="mt-6 flex min-h-0 flex-1 flex-col overflow-y-auto sm:mt-10">
             {PROJECTS.map((project, i) => (
               <li
                 key={project.slug}
-                className="overflow-hidden border-t border-white/25"
+                className="flex min-h-[62px] flex-1 overflow-hidden border-t border-white/25 sm:min-h-[72px]"
               >
                 <div
+                  className="flex w-full items-center"
                   ref={(el) => {
                     rowRefs.current[i] = el;
                   }}
@@ -230,9 +235,9 @@ export function LabIndex() {
                     target="_blank"
                     rel="noopener noreferrer"
                     tabIndex={indexLive ? 0 : -1}
-                    className="group grid grid-cols-[auto_1fr] items-center gap-3 py-2.5 opacity-70 transition-opacity duration-200 hover:opacity-100 focus-visible:opacity-100 sm:grid-cols-[1fr_auto_1fr] sm:gap-6 sm:py-3.5"
+                    className="group grid w-full grid-cols-[auto_1fr] items-center gap-3 opacity-70 transition-opacity duration-200 hover:opacity-100 focus-visible:opacity-100 sm:grid-cols-[1fr_auto_1fr] sm:gap-6"
                   >
-                    <span className="order-2 text-base font-black tracking-tight transition-transform duration-300 group-hover:translate-x-1 sm:order-1 sm:text-right sm:text-3xl sm:group-hover:translate-x-0 sm:group-hover:-translate-x-1.5">
+                    <span className="order-2 text-lg font-black tracking-tight transition-transform duration-300 group-hover:translate-x-1 sm:order-1 sm:text-right sm:text-3xl sm:group-hover:translate-x-0 sm:group-hover:-translate-x-1.5">
                       {project.title}
                     </span>
                     <span className="order-1 inline-flex h-6 w-11 items-center justify-center border border-white/50 font-mono text-[10px] transition-colors duration-200 group-hover:bg-[color:var(--paper)] group-hover:text-[color:var(--violet)] sm:order-2">
