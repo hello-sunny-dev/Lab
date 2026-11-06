@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef, useState } from "react";
 import * as THREE from "three";
 import { extend, useFrame, type ThreeEvent } from "@react-three/fiber";
 import { shaderMaterial } from "@react-three/drei";
@@ -63,17 +63,19 @@ const ParticleMaterial = shaderMaterial(
 
 extend({ ParticleMaterial });
 
+function createParticleBuffers() {
+  const a = samplePoints(drawLabText, COUNT);
+  const b = samplePoints(drawSunSilhouette, COUNT);
+  const r = new Float32Array(COUNT);
+  for (let i = 0; i < COUNT; i++) r[i] = Math.random();
+  return { positions: new Float32Array(a), targetsA: a, targetsB: b, randoms: r };
+}
+
 export function ParticleField({ morphTarget }: { morphTarget: number }) {
   const matRef = useRef<InstanceType<typeof ParticleMaterial>>(null);
   const mouse = useRef(new THREE.Vector3(999, 999, 0));
 
-  const { positions, targetsA, targetsB, randoms } = useMemo(() => {
-    const a = samplePoints(drawLabText, COUNT);
-    const b = samplePoints(drawSunSilhouette, COUNT);
-    const r = new Float32Array(COUNT);
-    for (let i = 0; i < COUNT; i++) r[i] = Math.random();
-    return { positions: new Float32Array(a), targetsA: a, targetsB: b, randoms: r };
-  }, []);
+  const [{ positions, targetsA, targetsB, randoms }] = useState(createParticleBuffers);
 
   useFrame((_, delta) => {
     if (!matRef.current) return;

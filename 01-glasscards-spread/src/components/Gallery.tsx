@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import {
   motion,
   useMotionValue,
@@ -14,17 +14,23 @@ import { GlassCard } from "./GlassCard";
 
 const SCENE_SPRING = { stiffness: 40, damping: 30 };
 
-function useIsMobile() {
-  const [m, setM] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    setM(mq.matches);
-    const cb = (e: MediaQueryListEvent) => setM(e.matches);
-    mq.addEventListener("change", cb);
-    return () => mq.removeEventListener("change", cb);
-  }, []);
-  return m;
+const MOBILE_QUERY = "(max-width: 640px)";
+
+function subscribeToMobile(onChange: () => void) {
+  const mq = window.matchMedia(MOBILE_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
 }
+
+function useIsMobile() {
+  return useSyncExternalStore(
+    subscribeToMobile,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => false
+  );
+}
+
+const subscribeToNothing = () => () => {};
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -36,7 +42,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 export function Gallery() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribeToNothing, () => true, () => false);
   const [selected, setSelected] = useState<number | null>(null);
   const [orderedCards, setOrderedCards] = useState<CardData[]>(cards);
   const [isShuffling, setIsShuffling] = useState(false);
@@ -72,8 +78,6 @@ export function Gallery() {
       }, 300);
     }, 400);
   }
-
-  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     function handleMove(e: PointerEvent) {

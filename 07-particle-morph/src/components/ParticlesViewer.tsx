@@ -1,25 +1,17 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import * as THREE from "three";
+import { Suspense, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrthographicCamera } from "@react-three/drei";
 import { ParticleField } from "./ParticleField";
 
+const TARGET_HALF_WIDTH = 6;
+
 /** Keeps ~6 world units of half-width visible regardless of viewport size,
  *  so the particle field doesn't crop on narrow/mobile screens. */
-function ResponsiveZoom() {
-  const camera = useThree((s) => s.camera) as THREE.OrthographicCamera;
+function ResponsiveCamera() {
   const width = useThree((s) => s.size.width);
-  const height = useThree((s) => s.size.height);
-
-  useEffect(() => {
-    const targetHalfWidth = 6;
-    camera.zoom = width / 2 / targetHalfWidth;
-    camera.updateProjectionMatrix();
-  }, [camera, width, height]);
-
-  return null;
+  return <OrthographicCamera makeDefault position={[0, 0, 10]} zoom={width / 2 / TARGET_HALF_WIDTH} />;
 }
 
 export function ParticlesViewer() {
@@ -29,8 +21,7 @@ export function ParticlesViewer() {
     <div className="relative h-[100dvh] w-full bg-[#120f1c]">
       <Canvas dpr={[1, 1.8]}>
         <Suspense fallback={null}>
-          <OrthographicCamera makeDefault position={[0, 0, 10]} />
-          <ResponsiveZoom />
+          <ResponsiveCamera />
           <ParticleField morphTarget={morphed ? 1 : 0} />
         </Suspense>
       </Canvas>
