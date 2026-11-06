@@ -60,10 +60,10 @@ export const PROJECTS: Project[] = [
     number: "05",
     slug: "interactive-planet",
     kind: "Shader study",
-    summary: "Hand-written GLSL terrain and atmosphere.",
+    summary: "Custom GLSL terrain and atmosphere.",
     title: "Interactive Planet",
     description:
-      "A stylized planet in hand-written GLSL — noise-shaded terrain, drifting clouds, Fresnel atmosphere.",
+      "A stylized planet in custom GLSL — noise-shaded terrain, drifting clouds, Fresnel atmosphere.",
     stack: ["Next.js", "React Three Fiber", "GLSL"],
     url: "https://05-interactive-planet.vercel.app",
   },

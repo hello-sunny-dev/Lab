@@ -1,8 +1,22 @@
 # Lab
 
-Frontend creative experiments — interactive experiences, motion, WebGL, and spatial UI.
+Weekend-sized frontend experiments in interaction, motion and WebGL.
 
-Each project is a weekend-sized, deployable experiment exploring a single concept.
+**[View the live index →](https://hello-sunny-dev-lab.vercel.app/)**
+
+## How this repo is built
+
+- **One concept, one app.** Each experiment explores a single idea and is scoped to about a weekend.
+- **Independently deployable.** Each one is a standalone Next.js app that can be deployed, upgraded or retired without affecting the others.
+- **Isolated on purpose.** Experiments share no runtime, so a change in one can't break another.
+- **A deliberate trade-off.** This duplicates some config and small hooks. In a product codebase, I'd extract these into a shared package.
+- **Checked in CI.** Every project runs lint, typecheck and a production build.
+
+## Where to start
+
+- **Data-driven components:** `01-glasscards-spread`, `03-scroll-story`, `08-portfolio-hub`
+- **Shared state:** `06-interactive-room`
+- **Custom shaders:** `05-interactive-planet`, `07-particle-morph`
 
 ## Projects
 
@@ -92,7 +106,7 @@ A 35mm film camera, taken apart by hand: drag a slider to explode it into its na
 
 **[View Live](https://05-interactive-planet.vercel.app)**
 
-A small stylized planet, entirely hand-written GLSL — no textures, no `MeshStandardMaterial`. Terrain color comes from fractal noise sampled directly on the sphere surface, clouds drift via a second noise layer scrolling over time, and the atmosphere is a two-tone Fresnel rim-light shell.
+A small stylized planet, entirely custom GLSL — no textures, no `MeshStandardMaterial`. Terrain color comes from fractal noise sampled directly on the sphere surface, clouds drift via a second noise layer scrolling over time, and the atmosphere is a two-tone Fresnel rim-light shell.
 
 - **Stack:** Next.js 16, React Three Fiber, Three.js, Tailwind CSS
 - **Key features:**
@@ -149,16 +163,14 @@ Thousands of particles spelling "LAB" — cursor nearby and they scatter away fr
 
 **[View Live](https://hello-sunny-dev-lab.vercel.app)**
 
-The index for everything above — a terminal/directory-listing hub styled after `ls -la`, one line per project with its live link, description, and stack.
+The index for everything above: a single violet square follows the cursor, then grows with the scroll to reveal the project list.
 
 - **Stack:** Next.js 16, Framer Motion, Tailwind CSS
 - **Key features:**
-  - Each project rendered as a directory-listing row (index, name, live status, stack tags, one-line description) instead of a card grid
-  - Compared 4 distinct visual directions via a rendered moodboard (dark glass / terminal directory / bento specimen board / blueprint schematic) before building — picked terminal directory for the "lab log" feel and because it doesn't repeat 01/02's glass look
-  - Staggered line-by-line reveal on load, hover-highlight per row, blinking cursor status line
-  - No 3D/WebGL — deliberately simple, monospace-first, to read as a log rather than another hero showcase
-- **Focus:** Information-dense index page, typography-led design, picking a visual identity through comparison rather than iteration-in-place
-- **Learned:** `framer-motion`'s `whileInView` needs a real scroll to fire its `IntersectionObserver` — a headless full-page screenshot taken right after page load won't trigger it for below-the-fold content, so rows stayed invisible; switched to a plain mount-triggered `animate` with a stagger delay instead
+  - Every row comes from one typed list in `projects.ts`, so adding an experiment needs no layout changes
+  - Hatched SVG wordmark that inverts where the square covers it
+  - Cursor chase gated behind `(hover: hover)` and `prefers-reduced-motion`; scroll-driven growth stays because it tracks the reader's own input
+- **Focus:** Scroll-linked motion, typography-led layout, a single typed source for project data
 
 ---
 
